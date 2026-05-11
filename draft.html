@@ -1330,12 +1330,21 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
     <div class="htp-section">
   <div class="htp-section-title">&#127942; Payouts</div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Most payouts are based on <span class="htp-highlight htp-amber">final finishing positions</span>. Top finishing positions pay out percentages of the total pot.</span></div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Payouts are <span class="htp-highlight htp-teal">cumulative</span> — a golfer may earn multiple payouts. See the Payouts table of the Draft tab for the full breakdown.</span></div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>The <span class="htp-highlight htp-amber">Round Leader payout</span> goes to the tournament leader after rounds 1, 2, and 3 respectively (Thursday 5%, Friday 5%, Saturday 5%). A golfer may collect multiple of these payouts.</span></div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span><span class="htp-highlight htp-amber">5% Bonus payout</span> — The <span class="htp-highlight htp-teal">first</span> that applies pays out:<br>
-    &nbsp;&nbsp;1) Hole-in-One (if multiple, payout splits equally)<br>
-    &nbsp;&nbsp;2) Low Amateur that makes the cut (tiebreaker rules apply)<br>
-    &nbsp;&nbsp;3) 11th–15th Place (1% each, tiebreaker rules apply)</span></div>
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Payouts are <span class="htp-highlight htp-teal">cumulative</span> — a golfer may earn multiple payouts (e.g. finish 1st AND lead after Saturday).</span></div>
+  <table class="htp-tax-table" style="margin-top:4px;">
+    <thead><tr><th>Placement</th><th>% of Pot</th><th style="padding-left:32px;">Placement</th><th>% of Pot</th></tr></thead>
+    <tbody>
+      <tr><td>🥇 Champion</td><td>22.5%</td><td style="padding-left:32px;">Thu Leader</td><td>5.0%</td></tr>
+      <tr><td>2nd Place</td><td>17.5%</td><td style="padding-left:32px;">Fri Leader</td><td>5.0%</td></tr>
+      <tr><td>3rd Place</td><td>12.5%</td><td style="padding-left:32px;">Sat Leader</td><td>5.0%</td></tr>
+      <tr><td>4th Place</td><td>7.5%</td><td style="padding-left:32px;">Hole-in-One</td><td>5.0%</td></tr>
+      <tr><td>5th Place</td><td>5.0%</td><td style="padding-left:32px;color:var(--pur);">11th–15th*</td><td style="color:var(--pur);">1.0% ea.</td></tr>
+      <tr><td>6th–10th Place</td><td>3.0% ea.</td><td style="padding-left:32px;"></td><td></td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:13px;color:var(--dim);margin-top:12px;line-height:1.6;">* 11th–15th place each pay 1% only if no hole-in-one occurred during the tournament.</div>
+  <div class="htp-item" style="margin-top:16px;"><span class="htp-bullet">&#8594;</span><span>The <span class="htp-highlight htp-amber">Round Leader payout</span> goes to the tournament leader after rounds 1, 2, and 3 (Thursday, Friday, Saturday). A golfer may collect multiple leader payouts.</span></div>
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span><span class="htp-highlight htp-amber">Hole-in-One</span> — 5% goes to the owner of the golfer who makes it. If multiple occur, the 5% splits equally. If none occur, the 5% pays out to 11th–15th place instead (1% each).</span></div>
     </div>
 
     <!-- Tiebreakers -->
@@ -1361,10 +1370,9 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
 
     <!-- Hole in One & Low Amateur -->
     <div class="htp-section">
-  <div class="htp-section-title">🎲 Hole-in-One &amp; Low Amateur Rules</div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>If any golfer makes a <span style="color:#eab308;font-weight:700;">hole-in-one</span> during the tournament, the 5% payout goes to the owner of that golfer. If multiple hole-in-ones occur, the 5% payout gets split equally.</span></div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>If no hole-in-one occurs and an <span style="color:#f43f5e;font-weight:700;">Amateur makes the cut</span>, the 5% payout goes to the owner of that golfer. If multiple amateurs make the cut, the payout goes to the amateur who finishes with the lowest score. If multiple amateurs make the cut and finish tied, tiebreaker rules apply.</span></div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>If no hole-in-one occurs and no amateur makes the cut, the 5% payout is divided into <span style="color:var(--pur);font-weight:700;">1% payouts for 11th–15th place</span>. Tiebreaker rules apply.</span></div>
+  <div class="htp-section-title">🎲 Hole-in-One Rules</div>
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>If any golfer makes a <span style="color:#eab308;font-weight:700;">hole-in-one</span> during the tournament, the 5% payout goes to the owner of that golfer. If multiple hole-in-ones occur, the 5% payout gets split equally among their owners.</span></div>
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>If no hole-in-one occurs, the 5% payout is divided into <span style="color:var(--pur);font-weight:700;">1% payouts for 11th–15th place</span>. Tiebreaker rules apply.</span></div>
     </div>
 
   </div>
@@ -1602,16 +1610,15 @@ const PAYOUTS=[
   {r:"3rd Place",       p:.125,  type:"finish",  pos:3},
   {r:"4th Place",       p:.075,  type:"finish",  pos:4},
   {r:"5th Place",       p:.05,   type:"finish",  pos:5},
-  {r:"6th Place",       p:.025,  type:"finish",  pos:6},
-  {r:"7th Place",       p:.025,  type:"finish",  pos:7},
-  {r:"8th Place",       p:.025,  type:"finish",  pos:8},
-  {r:"9th Place",       p:.025,  type:"finish",  pos:9},
-  {r:"10th Place",      p:.025,  type:"finish",  pos:10},
+  {r:"6th Place",       p:.03,   type:"finish",  pos:6},
+  {r:"7th Place",       p:.03,   type:"finish",  pos:7},
+  {r:"8th Place",       p:.03,   type:"finish",  pos:8},
+  {r:"9th Place",       p:.03,   type:"finish",  pos:9},
+  {r:"10th Place",      p:.03,   type:"finish",  pos:10},
   {r:"Thursday Leader", p:.05,   type:"leader",  round:1},
   {r:"Friday Leader",   p:.05,   type:"leader",  round:2},
   {r:"Saturday Leader", p:.05,   type:"leader",  round:3},
   {r:"Hole in One",     p:.05,   type:"bonus",   bonus:"hio"},
-  {r:"Low Amateur",     p:.05,   type:"bonus",   bonus:"lowam"},
   {r:"11th Place",      p:.01,   type:"finish",  pos:11},
   {r:"12th Place",      p:.01,   type:"finish",  pos:12},
   {r:"13th Place",      p:.01,   type:"finish",  pos:13},
@@ -1623,10 +1630,7 @@ const ROUND_PAYOUTS = PAYOUTS;
 function activeBonusTier(golfResults){
   if(!golfResults) return null;
   if(golfResults.hio) return 'hio';
-  if(golfResults.lowam_made_cut) return 'lowam';
-  const has1115 = Object.values(golfResults).some(r=>r.pos>=11&&r.pos<=15&&r.status==='complete');
-  if(has1115) return '11to15';
-  return null;
+  return '11to15';
 }
 
 function calcGolferWinningsFromResults(name, pot, golfResults){
@@ -3475,50 +3479,41 @@ function render(){
     }))
   ];
 
-  // Right rows: Thu/Fri/Sat, HiO, LowAm, 11th-15th, footnote
+  // Right rows: Thu/Fri/Sat, HiO, 11th-15th, footnote
   const rightRows = [
     ...PAYOUTS.slice(10,13).map(p=>({
-  name: p.r,
-  pct: (p.p*100).toFixed(2)+'%',
-  pay: '$'+(pot*p.p).toFixed(2),
-  nameStyle: 'font-weight:700;color:var(--text);',
-  pctStyle: 'color:var(--dim);',
-  payStyle: 'font-weight:700;color:var(--teal);',
-  bg: ''
+      name: p.r,
+      pct: (p.p*100).toFixed(2)+'%',
+      pay: '$'+(pot*p.p).toFixed(2),
+      nameStyle: 'font-weight:700;color:var(--text);',
+      pctStyle: 'color:var(--dim);',
+      payStyle: 'font-weight:700;color:var(--teal);',
+      bg: ''
     })),
     {
-  name: 'Hole-in-One',
-  pct: '5.00%',
-  pay: '$'+(pot*0.05).toFixed(2),
-  nameStyle: 'font-weight:700;color:#eab308;',
-  pctStyle: 'color:var(--dim);',
-  payStyle: 'font-weight:700;color:var(--teal);',
-  bg: 'background:rgba(234,179,8,.06);'
+      name: 'Hole-in-One',
+      pct: '5.00%',
+      pay: '$'+(pot*0.05).toFixed(2),
+      nameStyle: 'font-weight:700;color:#eab308;',
+      pctStyle: 'color:var(--dim);',
+      payStyle: 'font-weight:700;color:var(--teal);',
+      bg: 'background:rgba(234,179,8,.06);'
     },
-    {
-  name: 'Low Amateur*',
-  pct: '5.00%',
-  pay: '$'+(pot*0.05).toFixed(2),
-  nameStyle: 'font-weight:700;color:#f43f5e;',
-  pctStyle: 'color:var(--dim);',
-  payStyle: 'font-weight:700;color:var(--teal);',
-  bg: 'background:rgba(244,63,94,.06);'
-    },
-    ...PAYOUTS.slice(15).map(p=>({
-  name: p.r+'**',
-  pct: (p.p*100).toFixed(2)+'%',
-  pay: '$'+(pot*p.p).toFixed(2),
-  nameStyle: 'font-weight:700;color:var(--pur);',
-  pctStyle: 'color:var(--dim);',
-  payStyle: 'font-weight:700;color:var(--teal);',
-  bg: 'background:rgba(168,85,247,.06);'
+    ...PAYOUTS.slice(14).map(p=>({
+      name: p.r+'*',
+      pct: (p.p*100).toFixed(2)+'%',
+      pay: '$'+(pot*p.p).toFixed(2),
+      nameStyle: 'font-weight:700;color:var(--pur);',
+      pctStyle: 'color:var(--dim);',
+      payStyle: 'font-weight:700;color:var(--teal);',
+      bg: 'background:rgba(168,85,247,.06);'
     })),
     {
-  name: '<div style="font-size:12px;color:var(--dim);line-height:1.5;white-space:nowrap;">* Pays only if no hole-in-one</div><div style="font-size:12px;color:var(--dim);line-height:1.5;white-space:nowrap;">** Pays only if no hole-in-one and no amateur makes the cut</div>',
-  pct: '', pay: '',
-  nameStyle: 'vertical-align:middle;',
-  pctStyle: '', payStyle: '',
-  bg: ''
+      name: '<div style="font-size:12px;color:var(--dim);line-height:1.5;white-space:nowrap;">* Pays only if no hole-in-one occurred</div>',
+      pct: '', pay: '',
+      nameStyle: 'vertical-align:middle;',
+      pctStyle: '', payStyle: '',
+      bg: ''
     }
   ];
 
@@ -3784,11 +3779,11 @@ async function renderResults(){
     {label:'3rd Place',  pct:'12.5', place:3},
     {label:'4th Place',  pct:'7.5',  place:4},
     {label:'5th Place',  pct:'5.0',  place:5},
-    {label:'6th Place',  pct:'2.5',  place:6},
-    {label:'7th Place',  pct:'2.5',  place:7},
-    {label:'8th Place',  pct:'2.5',  place:8},
-    {label:'9th Place',  pct:'2.5',  place:9},
-    {label:'10th Place', pct:'2.5',  place:10},
+    {label:'6th Place',  pct:'3.0',  place:6},
+    {label:'7th Place',  pct:'3.0',  place:7},
+    {label:'8th Place',  pct:'3.0',  place:8},
+    {label:'9th Place',  pct:'3.0',  place:9},
+    {label:'10th Place', pct:'3.0',  place:10},
   ];
 
   // Get top 10 from live results
@@ -3855,9 +3850,7 @@ async function renderResults(){
 
   const hioOwner = hio ? ownerOf(hio) : null;
   const hioPayout = totalPot ? '$'+(totalPot*0.05).toFixed(2) : '—';
-  const lowAmPayout = (totalPot && !hio) ? '$'+(totalPot*0.05).toFixed(2) : (hio ? '$0.00' : '—');
-  const extraPayout = (totalPot && !hio && !lowAmCut) ? '$'+(totalPot*0.01).toFixed(2) : (totalPot ? '$0.00' : '—');
-
+  const extraPayout = (totalPot && !hio) ? '$'+(totalPot*0.01).toFixed(2) : (totalPot ? '$0.00' : '—');
 
   const hioRow = `<tr>
     <td style="${thS}">Hole-in-One</td>
@@ -3868,22 +3861,13 @@ async function renderResults(){
     <td style="${thS}text-align:center;white-space:nowrap;">5.0%</td>
   </tr>`;
 
-  const lowAmRow = `<tr>
-    <td style="${thS}">Low Amateur*</td>
-    <td style="${tdY}">${lowAmName||'—'}</td>
-    <td style="${tdY}">${lowAmName?ownerOf(lowAmName)||'—':'—'}</td>
-    <td style="${thS}text-align:center;color:#2d7a4a;">—</td>
-    <td style="${thS}text-align:center;white-space:nowrap;">${lowAmPayout}</td>
-    <td style="${thS}text-align:center;white-space:nowrap;">5.0%*</td>
-  </tr>`;
-
   const extraRows = [11,12,13,14,15].map(n=>`<tr>
-    <td style="${thS}">${n}th Place**</td>
+    <td style="${thS}">${n}${n===11?'st':n===12?'nd':n===13?'rd':'th'} Place*</td>
     <td style="${tdY}">—</td>
     <td style="${tdY}">—</td>
     <td style="${thS}text-align:center;color:#2d7a4a;">—</td>
     <td style="${thS}text-align:center;white-space:nowrap;">${extraPayout}</td>
-    <td style="${thS}text-align:center;white-space:nowrap;">1.0%**</td>
+    <td style="${thS}text-align:center;white-space:nowrap;">1.0%*</td>
   </tr>`).join('');
 
   // ── OWNER CARDS ──────────────────────────────────────────────
@@ -4047,17 +4031,6 @@ async function renderResults(){
           <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Hole-in-One</label>
           <input id="inp-hio" value="${hio||''}" placeholder="Leave blank if none..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
         </div>
-        <div>
-          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Low Amateur Name</label>
-          <input id="inp-lowam" value="${lowAmName||''}" placeholder="Leave blank if N/A..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
-        </div>
-        <div>
-          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Amateur Made Cut</label>
-          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;color:#e8f5e9;font-size:14px;padding:8px 0;">
-            <input type="checkbox" id="inp-lowam-cut" ${lowAmCut?'checked':''} style="width:18px;height:18px;accent-color:#FFFF00;">
-            Yes
-          </label>
-        </div>
       </div>
       <button onclick="saveLeaderBonusData()" style="background:linear-gradient(135deg,#2d7a4a,#1a4a2e);border:1px solid #FFFF00;border-radius:8px;color:#FFFF00;font-size:13px;font-weight:800;padding:10px 24px;cursor:pointer;letter-spacing:.5px;">💾 Save All</button>
       <datalist id="golfer-list">${ALL_TEAMS.map(g=>`<option value="${g.name}">`).join('')}</datalist>
@@ -4090,12 +4063,11 @@ async function renderResults(){
             ${scorecardRows}
             ${leaderRows}
             ${hioRow}
-            ${lowAmRow}
             ${extraRows}
           </tbody>
         </table>
       </div>
-<div style="margin-top:12px;"><div style="font-size:13px;font-weight:700;color:#81c784;margin-bottom:4px;"><strong>*</strong> Pays only if no hole-in-one</div><div style="font-size:13px;font-weight:700;color:#81c784;"><strong>**</strong> Pays only if no hole-in-one and no amateur makes the cut</div></div>
+<div style="margin-top:12px;"><div style="font-size:13px;font-weight:700;color:#81c784;margin-bottom:4px;"><strong>*</strong> Pays only if no hole-in-one occurred</div></div>
     </div>
 
     <!-- OWNER CARDS -->
@@ -4420,8 +4392,6 @@ async function saveLeaderBonusData(){
   const rnd2 = document.getElementById('inp-rnd2')?.value?.trim()||'';
   const rnd3 = document.getElementById('inp-rnd3')?.value?.trim()||'';
   const hio  = document.getElementById('inp-hio')?.value?.trim()||'';
-  const lowam= document.getElementById('inp-lowam')?.value?.trim()||'';
-  const lowamCut = document.getElementById('inp-lowam-cut')?.checked||false;
   const update = {};
   const placementsToSave = {};
   for(let i=1;i<=10;i++){
@@ -4432,15 +4402,12 @@ async function saveLeaderBonusData(){
   update['golf/results/round1_leader'] = rnd1||null;
   update['golf/results/round2_leader'] = rnd2||null;
   update['golf/results/round3_leader'] = rnd3||null;
-  update['golf/results/hio']       = hio||null;
-  update['golf/results/lowam_name']    = lowam||null;
-  update['golf/results/lowam_made_cut']= lowamCut||null;
+  update['golf/results/hio']           = hio||null;
   update['golf/lastSync'] = Date.now();
   update['golf/_t'] = _COMM_TOKEN;
-  // Validate all golfer inputs
   const allInputIds = ['inp-place-1','inp-place-2','inp-place-3','inp-place-4','inp-place-5',
     'inp-place-6','inp-place-7','inp-place-8','inp-place-9','inp-place-10',
-    'inp-rnd1','inp-rnd2','inp-rnd3','inp-hio','inp-lowam'];
+    'inp-rnd1','inp-rnd2','inp-rnd3','inp-hio'];
   const golferNames = new Set(ALL_TEAMS.map(g=>g.name));
   for(const id of allInputIds){
     const el = document.getElementById(id);
