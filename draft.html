@@ -2234,7 +2234,7 @@ function showForm(mode){
   inp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); doJoin(); } });
     }}, 50);
   } else {
-  <div class="card-title">Commissioner Setup</div>
+    card.innerHTML=`<div class="card-title">Commissioner Setup</div>
   <div class="card-sub">Configure your draft settings</div>
   <div class="field"><label>Draft Name</label><input class="finp" id="f-name" value="PGA Championship 2026" onfocus="this.select()"/></div>
   <div class="grid3">
