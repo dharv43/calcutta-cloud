@@ -1065,7 +1065,7 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
 
 <!-- ── TOP NAV ── -->
 <div id="top-nav" style="display:none">
-  <a class="nav-logo" href="https://calcutta.cloud" style="text-decoration:none;color:inherit;line-height:1.2;">2026 PGA Championship<br><span>Calcutta</span></a>
+  <a class="nav-logo" href="https://calcutta.cloud" style="text-decoration:none;color:inherit;line-height:1.2;"><span>2026</span> PGA Championship<br>Calcutta</a>
   <div class="nav-tab" data-tab="htp" onclick="goTab('htp')">How to Play</div>
   <div class="nav-tab" data-tab="draft" onclick="goTab('draft')">Draft</div>
   <div class="nav-tab" data-tab="results" onclick="goTab('results')">Results</div>
@@ -1302,14 +1302,57 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
     <div class="htp-section">
   <div class="htp-section-title">&#128176; Salary Cap &amp; Luxury Tax</div>
   <div id="htp-cap-section">
-    <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Each participant has a <span class="htp-highlight htp-amber">$100 salary cap</span>. You can spend beyond $100, but you'll owe a luxury tax on the overage.</span></div>
-    <div class="htp-item"><span class="htp-bullet">&#8594;</span><span><strong>Luxury Tax Tiers (above cap):</strong><br>
-      $101–$150: 50% tax on overage<br>
-      $151–$200: 100% tax on overage<br>
-      $201–$250: 150% tax on overage<br>
-      $251+: 200% tax on overage
-    </span></div>
-    <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>All luxury tax money goes into the pot — 100% of spending (including taxes) pays out to winners.</span></div>
+    <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Every participant has a <span class="htp-highlight htp-amber">$100 salary cap</span> — this is how much you can spend before luxury taxes kick in.</span></div>
+    <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>You <em>can</em> exceed the cap — but every dollar spent over the cap is taxed.</span></div>
+    <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Luxury taxes are tiered — dollars spent within each luxury tax level are taxed differently (see below):</span></div>
+
+    <table class="htp-tax-table" style="margin-top:12px;">
+      <thead>
+        <tr><th>Spend Range</th><th>Tax Rate</th></tr>
+      </thead>
+      <tbody>
+        <tr><td style="color:var(--teal);">$0 – $100</td><td style="color:var(--teal);">No tax</td></tr>
+        <tr><td style="color:var(--amber);">$101 – $150</td><td style="color:var(--amber);">50%</td></tr>
+        <tr><td style="color:#fb923c;">$151 – $200</td><td style="color:#fb923c;">100%</td></tr>
+        <tr><td style="color:#f87171;">$201 – $250</td><td style="color:#f87171;">150%</td></tr>
+        <tr><td style="color:#ef4444;">$251+</td><td style="color:#ef4444;">200%</td></tr>
+      </tbody>
+    </table>
+
+    <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin:20px 0 12px;">Examples</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+
+      <div style="background:var(--s3);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;">
+        <div style="font-size:14px;font-weight:700;color:var(--amber);">$100 spent</div>
+        <div style="font-size:13px;color:var(--dim);margin-top:4px;">→ $100 total cost (no luxury tax)</div>
+      </div>
+
+      <div style="background:var(--s3);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;">
+        <div style="font-size:14px;font-weight:700;color:var(--amber);">$120 spent</div>
+        <div style="font-size:13px;color:var(--dim);margin-top:4px;">→ $20 over cap<br>First $20 over cap × 50% = $10 luxury tax</div>
+        <div style="font-size:13px;font-weight:700;color:var(--teal);margin-top:6px;">Total cost: $130</div>
+      </div>
+
+      <div style="background:var(--s3);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;">
+        <div style="font-size:14px;font-weight:700;color:var(--amber);">$160 spent</div>
+        <div style="font-size:13px;color:var(--dim);margin-top:4px;">→ $60 over cap<br>First $50 over cap × 50% = $25 luxury tax<br>Next $10 over cap × 100% = $10 luxury tax</div>
+        <div style="font-size:13px;font-weight:700;color:var(--teal);margin-top:6px;">Total cost: $195</div>
+      </div>
+
+      <div style="background:var(--s3);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;">
+        <div style="font-size:14px;font-weight:700;color:var(--amber);">$200 spent</div>
+        <div style="font-size:13px;color:var(--dim);margin-top:4px;">→ $100 over cap<br>First $50 over cap × 50% = $25 luxury tax<br>Next $50 over cap × 100% = $50 luxury tax</div>
+        <div style="font-size:13px;font-weight:700;color:var(--teal);margin-top:6px;">Total cost: $275</div>
+      </div>
+
+      <div style="background:var(--s3);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;grid-column:span 2;">
+        <div style="font-size:14px;font-weight:700;color:var(--amber);">$260 spent</div>
+        <div style="font-size:13px;color:var(--dim);margin-top:4px;">→ $160 over cap<br>First $50 over cap × 50% = $25 luxury tax<br>Next $50 over cap × 100% = $50 luxury tax<br>Next $50 over cap × 150% = $75 luxury tax<br>Next $10 over cap × 200% = $20 luxury tax</div>
+        <div style="font-size:13px;font-weight:700;color:var(--teal);margin-top:6px;">Total cost: $430</div>
+      </div>
+
+    </div>
+    <div class="htp-item" style="margin-top:16px;"><span class="htp-bullet">&#8594;</span><span>All luxury tax money goes into the pot — 100% of spending (including taxes) pays out to winners.</span></div>
   </div>
     </div>
 
@@ -1330,8 +1373,10 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
     <div class="htp-section">
   <div class="htp-section-title">&#127942; Payouts</div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Most payouts are based on <span class="htp-highlight htp-amber">final finishing positions</span>. Top finishing positions pay out percentages of the total pot.</span></div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Payouts are <span class="htp-highlight htp-teal">cumulative</span> — a golfer may earn multiple payouts (e.g. finish 1st AND lead after Saturday).</span></div>
-  <table class="htp-tax-table" style="margin-top:4px;">
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Payouts are <span class="htp-highlight htp-teal">cumulative</span> — a golfer may earn multiple payouts (e.g. finish first AND Saturday leader).</span></div>
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>The <span class="htp-highlight htp-amber">Round Leader payout</span> goes to the tournament leader after rounds 1, 2, and 3 respectively (Thursday 5%, Friday 5%, Saturday 5%). A golfer may collect multiple of these payouts.</span></div>
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span><span class="htp-highlight htp-amber">Hole-in-One</span> — If any golfer makes a hole-in-one during the tournament, a 5% payout goes to the owner of that golfer. If multiple holes-in-one occur, that 5% payout gets split equally. If no hole-in-one occurs, the 5% pays out to 11th–15th place instead (1% each).</span></div>
+  <table class="htp-tax-table" style="margin-top:16px;">
     <thead><tr><th>Placement</th><th>% of Pot</th><th style="padding-left:32px;">Placement</th><th>% of Pot</th></tr></thead>
     <tbody>
       <tr><td>🥇 Champion</td><td>22.5%</td><td style="padding-left:32px;">Thu Leader</td><td>5.0%</td></tr>
@@ -1342,36 +1387,30 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
       <tr><td>6th–10th Place</td><td>3.0% ea.</td><td style="padding-left:32px;"></td><td></td></tr>
     </tbody>
   </table>
-  <div style="font-size:13px;color:var(--dim);margin-top:12px;line-height:1.6;">* 11th–15th place each pay 1% only if no hole-in-one occurred during the tournament.</div>
-  <div class="htp-item" style="margin-top:16px;"><span class="htp-bullet">&#8594;</span><span>The <span class="htp-highlight htp-amber">Round Leader payout</span> goes to the tournament leader after rounds 1, 2, and 3 (Thursday, Friday, Saturday). A golfer may collect multiple leader payouts.</span></div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span><span class="htp-highlight htp-amber">Hole-in-One</span> — 5% goes to the owner of the golfer who makes it. If multiple occur, the 5% splits equally. If none occur, the 5% pays out to 11th–15th place instead (1% each).</span></div>
+  <div style="font-size:13px;color:var(--dim);margin-top:12px;line-height:1.6;">* Only if no hole-in-one occurs during the tournament.</div>
     </div>
 
     <!-- Tiebreakers -->
     <div class="htp-section">
   <div class="htp-section-title">🔀 Tiebreakers</div>
   <div style="font-size:14px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">After Round 1 (Thursday)</div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Thursday round score</span></div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Thursday most birdies or better</span></div>
   <div class="htp-item" style="margin-bottom:18px;"><span class="htp-bullet">&#8594;</span><span>Thursday fewest putts</span></div>
   <div style="font-size:14px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">After Round 2 (Friday)</div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Friday round score</span></div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Friday most birdies or better</span></div>
   <div class="htp-item" style="margin-bottom:18px;"><span class="htp-bullet">&#8594;</span><span>Friday fewest putts</span></div>
   <div style="font-size:14px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">After Round 3 (Saturday)</div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Saturday round score</span></div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Saturday most birdies or better</span></div>
   <div class="htp-item" style="margin-bottom:18px;"><span class="htp-bullet">&#8594;</span><span>Saturday fewest putts</span></div>
   <div style="font-size:14px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Final (Sunday)</div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Sunday round score</span></div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Sunday most birdies or better</span></div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Sunday fewest putts</span></div>
     </div>
 
-    <!-- Hole in One & Low Amateur -->
+    <!-- Hole in One -->
     <div class="htp-section">
   <div class="htp-section-title">🎲 Hole-in-One Rules</div>
-  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>If any golfer makes a <span style="color:#eab308;font-weight:700;">hole-in-one</span> during the tournament, the 5% payout goes to the owner of that golfer. If multiple hole-in-ones occur, the 5% payout gets split equally among their owners.</span></div>
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>If any golfer makes a <span style="color:#eab308;font-weight:700;">hole-in-one</span> during the tournament, a 5% payout goes to the owner of that golfer. If multiple holes-in-one occur, that 5% payout gets split equally among their owners.</span></div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>If no hole-in-one occurs, the 5% payout is divided into <span style="color:var(--pur);font-weight:700;">1% payouts for 11th–15th place</span>. Tiebreaker rules apply.</span></div>
     </div>
 
