@@ -327,7 +327,7 @@ footer{
         </div>
       </div>
       <div class="event-actions" style="width:100%;justify-content:center;margin-top:8px;">
-        <a href="draft.html" class="btn-enter disabled" id="enter-btn">
+        <a href="draft.html" class="btn-enter" id="enter-btn">
           Enter Draft <span class="btn-enter-arrow">→</span>
         </a>
       </div>
@@ -426,9 +426,10 @@ function applyStatus(status){
     btn.style.boxShadow = '';
   } else {
     pill.style.display = 'none';
-    btn.classList.add('disabled');
+    btn.classList.remove('disabled');
     btn.innerHTML = 'Enter Draft <span class="btn-enter-arrow">→</span>';
-    btn.style.boxShadow = 'none';
+    btn.href = 'draft.html';
+    btn.style.boxShadow = '0 0 32px rgba(0,212,170,.2)';
   }
 }
 
