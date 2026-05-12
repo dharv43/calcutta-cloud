@@ -407,29 +407,29 @@ db.ref('hubConfig/draftStatus').on('value', snap => {
   if(sel) sel.value = status;
 });
 
-// Auto-detect live/paused from actual draft state
-db.ref('draft/draftStatus').on('value', snap => {
-  const ds = snap.val();
-  const pill = document.getElementById('status-pill');
-  const txt = document.getElementById('status-text');
-  if(!pill || !txt) return;
-  if(ds === 'live'){
-    pill.style.display = 'inline-flex';
-    pill.className = 'status-pill status-live';
-    txt.textContent = 'Draft Live';
-  } else if(ds === 'paused'){
-    pill.style.display = 'inline-flex';
-    pill.className = 'status-pill status-paused';
-    txt.textContent = 'Draft Paused';
-  } else if(ds === 'complete'){
-    pill.style.display = 'inline-flex';
-    pill.className = 'status-pill status-complete';
-    txt.textContent = 'Complete';
-  } else {
-    // Only hide if hubConfig hasn't set it to live
-    const hubSel = document.getElementById('comm-status-select');
-    if(!hubSel || hubSel.value === 'coming_soon') pill.style.display = 'none';
-  }
+// Auto-detect live/paused/complete from actual draft state
+document.addEventListener('DOMContentLoaded', () => {
+  db.ref('draft/draftStatus').on('value', snap => {
+    const ds = snap.val();
+    const pill = document.getElementById('status-pill');
+    const txt = document.getElementById('status-text');
+    if(!pill || !txt) return;
+    if(ds === 'live'){
+      pill.style.display = 'inline-flex';
+      pill.className = 'status-pill status-live';
+      txt.textContent = 'Draft Live';
+    } else if(ds === 'paused'){
+      pill.style.display = 'inline-flex';
+      pill.className = 'status-pill status-paused';
+      txt.textContent = 'Draft Paused';
+    } else if(ds === 'complete'){
+      pill.style.display = 'inline-flex';
+      pill.className = 'status-pill status-complete';
+      txt.textContent = 'Complete';
+    } else {
+      pill.style.display = 'none';
+    }
+  });
 });
 
 function applyStatus(status){
