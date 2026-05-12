@@ -181,6 +181,12 @@ nav{
   color:var(--red);
   animation:blink .9s infinite;
 }
+.status-paused{
+  background:rgba(245,158,11,.12);
+  border:1px solid rgba(245,158,11,.3);
+  color:var(--amber);
+  animation:blink .9s infinite;
+}
 .status-complete{
   background:rgba(16,185,129,.1);
   border:1px solid rgba(16,185,129,.3);
@@ -306,11 +312,11 @@ footer{
         <div class="event-name" style="font-size:64px;">2026 PGA Championship</div>
         <div class="event-subtitle" style="font-size:14px;">Aronimink Golf Club</div>
         <div class="event-subtitle" style="font-size:14px;margin-top:4px;">Newtown Square, PA</div>
-      </div>
-      <div class="event-status-wrap" style="align-items:center;">
-        <div class="status-pill status-coming-soon" id="status-pill" style="display:none;">
-          <span class="status-dot"></span>
-          <span id="status-text">Coming Soon</span>
+        <div style="margin-top:14px;min-height:32px;display:flex;justify-content:center;">
+          <div class="status-pill status-coming-soon" id="status-pill" style="display:none;">
+            <span class="status-dot"></span>
+            <span id="status-text">Coming Soon</span>
+          </div>
         </div>
       </div>
     </div>
@@ -397,9 +403,33 @@ db.ref('draft').on('value', snap => {
 db.ref('hubConfig/draftStatus').on('value', snap => {
   const status = snap.val() || 'coming_soon';
   applyStatus(status);
-  // Sync select
   const sel = document.getElementById('comm-status-select');
   if(sel) sel.value = status;
+});
+
+// Auto-detect live/paused from actual draft state
+db.ref('draft/draftStatus').on('value', snap => {
+  const ds = snap.val();
+  const pill = document.getElementById('status-pill');
+  const txt = document.getElementById('status-text');
+  if(!pill || !txt) return;
+  if(ds === 'live'){
+    pill.style.display = 'inline-flex';
+    pill.className = 'status-pill status-live';
+    txt.textContent = 'Draft Live';
+  } else if(ds === 'paused'){
+    pill.style.display = 'inline-flex';
+    pill.className = 'status-pill status-paused';
+    txt.textContent = 'Draft Paused';
+  } else if(ds === 'complete'){
+    pill.style.display = 'inline-flex';
+    pill.className = 'status-pill status-complete';
+    txt.textContent = 'Complete';
+  } else {
+    // Only hide if hubConfig hasn't set it to live
+    const hubSel = document.getElementById('comm-status-select');
+    if(!hubSel || hubSel.value === 'coming_soon') pill.style.display = 'none';
+  }
 });
 
 function applyStatus(status){
