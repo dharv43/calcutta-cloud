@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>2026 PGA Championship Calcutta — Draft Recap</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyC_COaEqzwvMRTdfnJAwA3z6ecVBIeKHmo",
+  authDomain: "pga-championship-calcutta.firebaseapp.com",
+  databaseURL: "https://pga-championship-calcutta-default-rtdb.firebaseio.com",
+  projectId: "pga-championship-calcutta",
+  storageBucket: "pga-championship-calcutta.firebasestorage.app",
+  messagingSenderId: "166207526746",
+  appId: "1:166207526746:web:67cebcc535d227ea360563"
+});
+const db = firebase.database();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#09111f;--surf:#0f1a2e;--s2:#152035;--s3:#1a2840;
+  --bdr:#1e2e45;--bdr2:#253650;
+  --text:#eef2ff;--dim:#5a7090;--dim2:#2e4060;
+  --teal:#00d4aa;--teal-d:#00a884;
+  --amber:#f59e0b;--gold:#eab308;--silver:#94a3b8;--bronze:#cd7f32;
+  --grn:#10b981;--red:#ef4444;--pur:#a855f7;--blue:#6366f1;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,212,170,.07), transparent);pointer-events:none;z-index:0;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(9,17,31,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--bdr);padding:16px 40px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--dim);text-decoration:none;}
+.nav-logo span{color:var(--teal);}
+.nav-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--dim);}
+
+/* HERO */
+.hero{position:relative;z-index:1;text-align:center;padding:64px 24px 48px;}
+.hero-eyebrow{display:inline-block;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal);background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:999px;padding:5px 16px;margin-bottom:20px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:80px;letter-spacing:2px;line-height:.95;color:var(--text);margin-bottom:8px;}
+.hero-title span{color:var(--teal);}
+.hero-sub{font-size:15px;color:var(--dim);font-weight:500;}
+
+/* STAT CARDS */
+.stats-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;max-width:900px;margin:0 auto 56px;padding:0 24px;position:relative;z-index:1;}
+.stat-card{background:var(--surf);border:1px solid var(--bdr2);border-radius:14px;padding:20px 28px;text-align:center;min-width:140px;}
+.stat-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:1px;color:var(--teal);}
+.stat-val.white{color:var(--text);}
+
+/* SORT TABS */
+.sort-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;padding:0 24px;position:relative;z-index:1;}
+.sort-btn{font-size:12px;font-weight:700;letter-spacing:.5px;padding:7px 18px;border-radius:8px;border:1px solid var(--bdr2);background:var(--surf);color:var(--dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.sort-btn:hover{color:var(--text);border-color:var(--bdr2);}
+.sort-btn.active{background:rgba(0,212,170,.1);border-color:rgba(0,212,170,.4);color:var(--teal);}
+
+/* MAIN TABLE */
+.table-wrap{max-width:1000px;margin:0 auto;padding:0 24px 32px;position:relative;z-index:1;}
+.recap-table{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;}
+.recap-table thead tr{background:var(--s3);}
+.recap-table th{padding:14px 20px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;}
+.recap-table th.r{text-align:right;}
+.recap-table th.c{text-align:center;}
+.recap-table td{padding:12px 20px;border-top:1px solid var(--bdr);vertical-align:middle;}
+.recap-table tr:hover td{background:rgba(255,255,255,.02);}
+.lot-num{font-family:'DM Mono',monospace;font-size:12px;color:var(--dim);width:36px;}
+.lot-name{font-size:15px;font-weight:700;color:var(--text);}
+.lot-type{display:inline-block;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;}
+.lot-type.individual{background:rgba(99,102,241,.15);color:#818cf8;}
+.lot-type.group{background:rgba(0,212,170,.1);color:var(--teal);}
+.lot-members{font-size:11px;color:var(--dim);margin-top:3px;line-height:1.5;}
+.lot-owner{font-size:14px;font-weight:700;color:var(--amber);}
+.lot-price{font-size:18px;font-weight:900;color:var(--teal);text-align:right;font-family:'DM Mono',monospace;}
+
+/* SPENDS TABLE */
+.section-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:16px;}
+.spend-wrap{max-width:1000px;margin:0 auto;padding:0 24px 80px;position:relative;z-index:1;}
+.spend-table{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;}
+.spend-table thead tr{background:var(--s3);}
+.spend-table th{padding:14px 20px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;}
+.spend-table th.r{text-align:right;}
+.spend-table td{padding:12px 20px;border-top:1px solid var(--bdr);font-size:14px;vertical-align:middle;}
+.spend-table tr:hover td{background:rgba(255,255,255,.02);}
+.spend-rank{font-family:'DM Mono',monospace;font-size:13px;color:var(--dim);}
+.spend-name{font-size:15px;font-weight:700;}
+.spend-bar-wrap{width:180px;}
+.spend-bar{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--teal),var(--teal-d));transition:width .3s;}
+.spend-lots{font-family:'DM Mono',monospace;font-size:13px;color:var(--dim);text-align:right;}
+.spend-tax{font-size:13px;color:var(--red);text-align:right;font-family:'DM Mono',monospace;}
+.spend-total{font-size:16px;font-weight:900;text-align:right;font-family:'DM Mono',monospace;color:var(--teal);}
+
+/* LOADING */
+.loading{text-align:center;padding:80px 24px;color:var(--dim);}
+.loading-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--teal);animation:ldot 1.2s infinite;margin:0 3px;}
+.loading-dot:nth-child(2){animation-delay:.2s;}
+.loading-dot:nth-child(3){animation-delay:.4s;}
+@keyframes ldot{0%,80%,100%{transform:scale(0);opacity:.3}40%{transform:scale(1);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.fade-in{animation:fadeUp .4s ease both;}
+
+@media(max-width:640px){
+  nav{padding:14px 16px;}
+  .hero{padding:40px 16px 32px;}
+  .hero-title{font-size:52px;}
+  .table-wrap,.spend-wrap{padding:0 16px 48px;}
+  .recap-table th,.recap-table td,.spend-table th,.spend-table td{padding:10px 12px;}
+  .spend-bar-wrap{display:none;}
+  .lot-members{display:none;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="https://calcutta.cloud">CALCUTTA<span>.</span>CLOUD</a>
+  <div class="nav-title">DRAFT RECAP</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">⛳ 2026 PGA Championship</div>
+  <h1 class="hero-title">DRAFT <span>RECAP</span></h1>
+  <p class="hero-sub">Aronimink Golf Club · Newtown Square, PA</p>
+</div>
+
+<div id="loading" class="loading">
+  <div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div>
+</div>
+
+<div id="content" style="display:none;">
+  <div class="stats-row" id="stats-row"></div>
+
+  <div class="sort-row">
+    <button class="sort-btn active" onclick="setSort('order')">Sale Order</button>
+    <button class="sort-btn" onclick="setSort('price_desc')">Price: High → Low</button>
+    <button class="sort-btn" onclick="setSort('price_asc')">Price: Low → High</button>
+    <button class="sort-btn" onclick="setSort('owner')">By Owner</button>
+  </div>
+
+  <div class="table-wrap">
+    <div class="section-title" style="margin-bottom:16px;">All 37 Lots — Auction Order</div>
+    <div style="overflow-x:auto;border-radius:16px;">
+      <table class="recap-table" id="recap-table">
+        <thead>
+          <tr>
+            <th style="width:44px;">#</th>
+            <th>Golfer / Group</th>
+            <th>Buyer</th>
+            <th class="r">Price</th>
+          </tr>
+        </thead>
+        <tbody id="recap-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="spend-wrap">
+    <div class="section-title">Spending Summary</div>
+    <div style="overflow-x:auto;border-radius:16px;">
+      <table class="spend-table" id="spend-table">
+        <thead>
+          <tr>
+            <th style="width:44px;">#</th>
+            <th>Participant</th>
+            <th class="r">Lots</th>
+            <th class="r">Spent</th>
+            <th class="r">Lux Tax</th>
+            <th class="r">Total Cost</th>
+            <th style="width:200px;"></th>
+          </tr>
+        </thead>
+        <tbody id="spend-tbody"></tbody>
+        <tfoot id="spend-tfoot"></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+let soldData = [];
+let cap = 100;
+let currentSort = 'order';
+
+function calcTax(spent, cap){
+  if(spent <= cap) return 0;
+  let tax = 0, rem = spent - cap;
+  for(const [mx, rate] of [[50,.5],[50,1],[50,1.5],[Infinity,2]]){
+    const c = Math.min(rem, mx); tax += c * rate; rem -= c; if(rem <= 0) break;
+  }
+  return Math.round(tax);
+}
+
+function fmt(n){ return '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+function setSort(s){
+  currentSort = s;
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderTable();
+}
+
+function getSorted(){
+  const d = [...soldData];
+  if(currentSort === 'price_desc') d.sort((a,b) => b.price - a.price);
+  else if(currentSort === 'price_asc') d.sort((a,b) => a.price - b.price);
+  else if(currentSort === 'owner') d.sort((a,b) => (a.owner||'').localeCompare(b.owner||''));
+  return d;
+}
+
+function renderTable(){
+  const tbody = document.getElementById('recap-tbody');
+  const sorted = getSorted();
+  tbody.innerHTML = sorted.map((s, i) => {
+    const isGroup = s.unitType === 'group' || (s.members && s.members.length > 1);
+    const members = s.members ? (Array.isArray(s.members) ? s.members : Object.values(s.members)) : [];
+    const memberNames = members.map(m => m.name || m).join(' · ');
+    const lotNum = currentSort === 'order' ? (soldData.indexOf(s) + 1) : (i + 1);
+    return `<tr class="fade-in" style="animation-delay:${i * 0.015}s">
+      <td class="lot-num">${lotNum}</td>
+      <td>
+        <div>
+          <span class="lot-name">${s.name}</span>
+          <span class="lot-type ${isGroup ? 'group' : 'individual'}">${isGroup ? 'Group' : 'Individual'}</span>
+        </div>
+        ${isGroup && memberNames ? `<div class="lot-members">${memberNames}</div>` : ''}
+      </td>
+      <td class="lot-owner">${s.owner || '—'}</td>
+      <td class="lot-price">${fmt(s.price || 0)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderSpends(){
+  const spendMap = {};
+  const lotsMap = {};
+  for(const s of soldData){
+    const o = s.owner || 'Unknown';
+    spendMap[o] = (spendMap[o] || 0) + (s.price || 0);
+    lotsMap[o] = (lotsMap[o] || 0) + 1;
+  }
+  const entries = Object.entries(spendMap).sort((a,b) => b[1] - a[1]);
+  const maxSpend = entries.length ? entries[0][1] : 1;
+  let totalPot = 0;
+
+  const tbody = document.getElementById('spend-tbody');
+  tbody.innerHTML = entries.map(([name, spent], i) => {
+    const tax = calcTax(spent, cap);
+    const total = spent + tax;
+    totalPot += total;
+    const barPct = Math.round((spent / maxSpend) * 100);
+    const rankColors = ['var(--gold)', 'var(--silver)', 'var(--bronze)'];
+    const nameColor = i < 3 ? rankColors[i] : 'var(--text)';
+    return `<tr>
+      <td class="spend-rank">${i+1}</td>
+      <td class="spend-name" style="color:${nameColor}">${name}</td>
+      <td class="spend-lots">${lotsMap[name]}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt(spent)}</td>
+      <td class="spend-tax">${tax > 0 ? '+' + fmt(tax) : '—'}</td>
+      <td class="spend-total">${fmt(total)}</td>
+      <td class="spend-bar-wrap"><div class="spend-bar" style="width:${barPct}%"></div></td>
+    </tr>`;
+  }).join('');
+
+  const tfoot = document.getElementById('spend-tfoot');
+  tfoot.innerHTML = `<tr style="background:var(--s3);">
+    <td colspan="2" style="padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim);">TOTAL POT</td>
+    <td style="text-align:right;font-family:'DM Mono',monospace;padding:14px 20px;color:var(--dim);">${soldData.length} lots</td>
+    <td colspan="2" style="padding:14px 20px;"></td>
+    <td style="text-align:right;font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--teal);padding:14px 20px;">${fmt(totalPot)}</td>
+    <td></td>
+  </tr>`;
+
+  return totalPot;
+}
+
+function renderStats(totalPot){
+  const spendMap = {};
+  for(const s of soldData) spendMap[s.owner] = (spendMap[s.owner]||0) + (s.price||0);
+  const participants = Object.keys(spendMap).length;
+  const prices = soldData.map(s => s.price||0);
+  const topLot = soldData.reduce((a,b) => (b.price||0) > (a.price||0) ? b : a, soldData[0]);
+  const avgPrice = prices.length ? Math.round(prices.reduce((a,b)=>a+b,0)/prices.length) : 0;
+
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total Pot</div><div class="stat-val">${fmt(totalPot)}</div></div>
+    <div class="stat-card"><div class="stat-label">Participants</div><div class="stat-val white">${participants}</div></div>
+    <div class="stat-card"><div class="stat-label">Lots Sold</div><div class="stat-val white">${soldData.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Avg Price</div><div class="stat-val white">${fmt(avgPrice)}</div></div>
+    <div class="stat-card"><div class="stat-label">Top Lot</div><div class="stat-val white" style="font-size:24px;line-height:1.2;">${topLot ? topLot.name : '—'}<br><span style="font-size:16px;color:var(--teal);">${topLot ? fmt(topLot.price) : ''}</span></div></div>
+  `;
+}
+
+db.ref('draft').once('value', snap => {
+  const d = snap.val();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('content').style.display = 'block';
+
+  if(!d || !d.sold || !d.sold.length){
+    document.getElementById('content').innerHTML = '<div class="loading" style="color:var(--dim)">No draft data found.</div>';
+    return;
+  }
+
+  cap = d.config?.cap || 100;
+  soldData = Array.isArray(d.sold) ? d.sold : Object.values(d.sold);
+
+  renderTable();
+  const totalPot = renderSpends();
+  renderStats(totalPot);
+});
+</script>
+</body>
+</html>

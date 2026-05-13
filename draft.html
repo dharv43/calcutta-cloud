@@ -332,6 +332,9 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
 .pot-lbl{font-size:13px;font-weight:700;letter-spacing:1.5px;color:var(--dim2);text-transform:uppercase;margin-bottom:6px;}
 .pot-amt{font-size:52px;font-weight:900;color:var(--teal);line-height:1;letter-spacing:-1px;}
 .pot-sub{font-size:11px;color:var(--dim);margin-top:6px;}
+.recap-sort-btn{font-size:12px;font-weight:700;letter-spacing:.5px;padding:7px 16px;border-radius:8px;border:1px solid var(--bdr2);background:var(--surf);color:var(--dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.recap-sort-btn:hover{color:var(--text);}
+.recap-sort-btn.active{background:rgba(0,212,170,.1);border-color:rgba(0,212,170,.4);color:var(--teal);}
 .pay-tbl{width:100%;border-collapse:collapse;}
 .pay-tbl th:nth-child(4),.pay-tbl td:nth-child(4){padding-left:24px;text-align:left;}
 .pay-tbl th:nth-child(2),.pay-tbl td:nth-child(2){text-align:center;}
@@ -1077,6 +1080,7 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
   <div class="nav-tab" data-tab="draft" onclick="goTab('draft')">Draft</div>
   <div class="nav-tab" data-tab="results" onclick="goTab('results')">Results</div>
   <div class="nav-tab" data-tab="leaderboard" onclick="goTab('leaderboard')">Leaderboard</div>
+  <div class="nav-tab" data-tab="recap" onclick="goTab('recap')">Recap</div>
   <div class="nav-spacer"></div>
   <span id="comm-toggle" style="display:none;align-items:center;justify-content:center;position:absolute;left:50%;transform:translateX(-50%);pointer-events:none;flex-shrink:0;"></span>
   <div class="nav-spacer"></div>
@@ -1285,6 +1289,56 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
   <div class="bracket-wrap">
 
     <div id="leaderboard-content"></div>
+  </div>
+</div>
+<div id="page-recap" class="page" style="display:none;">
+  <div style="max-width:1000px;margin:0 auto;padding:32px 24px 80px;">
+    <!-- Sort controls -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--text);">Draft <span style="color:var(--teal);">Recap</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;" id="recap-sort-btns">
+        <button onclick="setRecapSort('order')" class="recap-sort-btn active" data-sort="order">Sale Order</button>
+        <button onclick="setRecapSort('price_desc')" class="recap-sort-btn" data-sort="price_desc">Price ↓</button>
+        <button onclick="setRecapSort('price_asc')" class="recap-sort-btn" data-sort="price_asc">Price ↑</button>
+        <button onclick="setRecapSort('owner')" class="recap-sort-btn" data-sort="owner">By Owner</button>
+        <a href="/recap.html" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.5px;padding:7px 16px;border-radius:8px;border:1px solid rgba(0,212,170,.4);background:rgba(0,212,170,.08);color:var(--teal);text-decoration:none;">↗ Share Recap</a>
+      </div>
+    </div>
+    <!-- Stats -->
+    <div id="recap-stats" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px;"></div>
+    <!-- Lots table -->
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px;">All Lots</div>
+    <div style="overflow-x:auto;border-radius:14px;border:1px solid var(--bdr);margin-bottom:40px;">
+      <table style="width:100%;border-collapse:collapse;background:var(--surf);">
+        <thead>
+          <tr style="background:var(--s3);">
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;width:44px;">#</th>
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;">Golfer / Group</th>
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;">Buyer</th>
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Price</th>
+          </tr>
+        </thead>
+        <tbody id="recap-lots-tbody"></tbody>
+      </table>
+    </div>
+    <!-- Spend summary -->
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px;">Spending Summary</div>
+    <div style="overflow-x:auto;border-radius:14px;border:1px solid var(--bdr);">
+      <table style="width:100%;border-collapse:collapse;background:var(--surf);">
+        <thead>
+          <tr style="background:var(--s3);">
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;width:44px;">#</th>
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;">Participant</th>
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Lots</th>
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Spent</th>
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Lux Tax</th>
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Total Cost</th>
+          </tr>
+        </thead>
+        <tbody id="recap-spend-tbody"></tbody>
+        <tfoot id="recap-spend-tfoot"></tfoot>
+      </table>
+    </div>
   </div>
 </div>
 <div id="page-htp" class="page" style="display:none;">
@@ -2888,6 +2942,102 @@ function goTab(tab){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
   if(tab==='results') renderResults();
   if(tab==='leaderboard'){ renderLeaderboard(); if(isComm && !_leaderboardApiLoading) fetchLiveLeaderboard(); }
+  if(tab==='recap') renderRecap();
+}
+
+let _recapSort = 'order';
+function setRecapSort(s){
+  _recapSort = s;
+  document.querySelectorAll('.recap-sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort===s));
+  renderRecapLots();
+}
+
+function renderRecap(){
+  if(!D || !D.sold || !D.sold.length){ 
+    document.getElementById('recap-lots-tbody').innerHTML = '<tr><td colspan="4" style="padding:32px;text-align:center;color:var(--dim);">No auction data yet.</td></tr>';
+    return;
+  }
+  renderRecapLots();
+  renderRecapSpends();
+  renderRecapStats();
+}
+
+function renderRecapLots(){
+  const sold = Array.isArray(D.sold) ? D.sold : Object.values(D.sold);
+  let sorted = [...sold];
+  if(_recapSort === 'price_desc') sorted.sort((a,b)=>(b.price||0)-(a.price||0));
+  else if(_recapSort === 'price_asc') sorted.sort((a,b)=>(a.price||0)-(b.price||0));
+  else if(_recapSort === 'owner') sorted.sort((a,b)=>(a.owner||'').localeCompare(b.owner||''));
+  const cap = D.config?.cap || 100;
+  const tbody = document.getElementById('recap-lots-tbody');
+  tbody.innerHTML = sorted.map((s, i) => {
+    const isGroup = s.unitType === 'group' || (s.members && (Array.isArray(s.members)?s.members:Object.values(s.members)).length > 1);
+    const typeLabel = isGroup ? `<span style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-left:8px;vertical-align:middle;background:rgba(0,212,170,.1);color:var(--teal);">Group</span>` : `<span style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-left:8px;vertical-align:middle;background:rgba(99,102,241,.15);color:#818cf8;">Indiv.</span>`;
+    const lotNum = _recapSort === 'order' ? (i+1) : (sold.indexOf(s)+1);
+    return `<tr style="border-top:1px solid var(--bdr);">
+      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:12px;color:var(--dim);">${lotNum}</td>
+      <td style="padding:11px 16px;font-size:14px;font-weight:700;color:var(--text);">${s.name}${typeLabel}</td>
+      <td style="padding:11px 16px;font-size:14px;font-weight:700;color:var(--amber);">${s.owner||'—'}</td>
+      <td style="padding:11px 16px;font-size:16px;font-weight:900;color:var(--teal);text-align:right;font-family:'DM Mono',monospace;">$${(s.price||0).toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderRecapSpends(){
+  const sold = Array.isArray(D.sold) ? D.sold : Object.values(D.sold);
+  const cap = D.config?.cap || 100;
+  const spendMap = {}, lotsMap = {};
+  for(const s of sold){
+    const o = s.owner||'Unknown';
+    spendMap[o] = (spendMap[o]||0) + (s.price||0);
+    lotsMap[o] = (lotsMap[o]||0) + 1;
+  }
+  const entries = Object.entries(spendMap).sort((a,b)=>b[1]-a[1]);
+  let totalPot = 0;
+  const goldColors = ['var(--gold)','var(--silver)','var(--bronze)'];
+  const tbody = document.getElementById('recap-spend-tbody');
+  tbody.innerHTML = entries.map(([name, spent], i) => {
+    const tax = calcTax(spent, cap);
+    const total = spent + tax;
+    totalPot += total;
+    const nameColor = i < 3 ? goldColors[i] : 'var(--text)';
+    return `<tr style="border-top:1px solid var(--bdr);">
+      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:12px;color:var(--dim);">${i+1}</td>
+      <td style="padding:11px 16px;font-size:14px;font-weight:700;color:${nameColor};">${name}</td>
+      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:13px;color:var(--dim);text-align:right;">${lotsMap[name]}</td>
+      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:14px;text-align:right;">$${spent.toFixed(2)}</td>
+      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:13px;color:var(--red);text-align:right;">${tax>0?'+$'+tax.toFixed(2):'—'}</td>
+      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:15px;font-weight:900;color:var(--teal);text-align:right;">$${total.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('recap-spend-tfoot').innerHTML = `<tr style="background:var(--s3);">
+    <td colspan="2" style="padding:14px 16px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);">TOTAL POT</td>
+    <td style="padding:14px 16px;font-family:'DM Mono',monospace;color:var(--dim);text-align:right;">${sold.length} lots</td>
+    <td colspan="2" style="padding:14px 16px;"></td>
+    <td style="padding:14px 16px;font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--teal);text-align:right;">$${totalPot.toFixed(2)}</td>
+  </tr>`;
+  return totalPot;
+}
+
+function renderRecapStats(){
+  const sold = Array.isArray(D.sold) ? D.sold : Object.values(D.sold);
+  const cap = D.config?.cap || 100;
+  const spendMap = {};
+  for(const s of sold) spendMap[s.owner] = (spendMap[s.owner]||0)+(s.price||0);
+  let totalPot = 0;
+  for(const [,spent] of Object.entries(spendMap)) totalPot += spent + calcTax(spent, cap);
+  const topLot = sold.reduce((a,b)=>(b.price||0)>(a.price||0)?b:a, sold[0]);
+  const avg = sold.length ? sold.reduce((a,b)=>a+(b.price||0),0)/sold.length : 0;
+  document.getElementById('recap-stats').innerHTML = [
+    {label:'Total Pot', val:'$'+totalPot.toFixed(2), color:'var(--teal)'},
+    {label:'Participants', val:Object.keys(spendMap).length, color:'var(--text)'},
+    {label:'Lots Sold', val:sold.length, color:'var(--text)'},
+    {label:'Avg Price', val:'$'+avg.toFixed(2), color:'var(--text)'},
+    {label:'Top Lot', val:`${topLot?.name||'—'} — $${(topLot?.price||0).toFixed(2)}`, color:'var(--amber)'},
+  ].map(s=>`<div style="background:var(--surf);border:1px solid var(--bdr2);border-radius:12px;padding:16px 20px;min-width:120px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:6px;">${s.label}</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:${s.color};line-height:1.1;">${s.val}</div>
+  </div>`).join('');
 }
 
 
