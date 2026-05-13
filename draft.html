@@ -2186,9 +2186,28 @@ function doJoinDraft(){
     setTimeout(doJoinDraft, 150);
     return;
   }
-  const tbl=el("mgr-tbl"); if(!tbl) return;
+  const tbl=el("mgr-tbl");
+  const thead=tbl ? tbl.querySelector("thead tr") : null;
+  // Fallback: if table not rendered yet, use a simple modal prompt
+  if(!tbl || !thead){
+    const name = prompt("Enter your name to join the draft:");
+    if(!name || !name.trim()) return;
+    const n = name.trim();
+    const nNorm = n.toLowerCase().replace(/\s+/g," ");
+    if(D.locked){ showToast("Draft is locked."); return; }
+    if(D.managers && D.managers.some(m=>m.name.toLowerCase().replace(/\s+/g," ")===nNorm)){
+      showToast("That name is already taken."); return;
+    }
+    const newManagers=[...(D.managers||[]),{name:n,order:(D.managers||[]).length}];
+    draftRef.update({managers:newManagers}).then(()=>{
+      myName=n; isComm=false;
+      try{ localStorage.setItem("calcutta_name",n); }catch(e){}
+      render();
+      setTimeout(()=>window.scrollTo({top:0,behavior:'instant'}), 100);
+    }).catch(e=>showToast("Error: "+e.message));
+    return;
+  }
   if(document.getElementById("join-pending-th")) return;
-  const thead=tbl.querySelector("thead tr"); if(!thead) return;
   const th=document.createElement("th");
   th.id="join-pending-th";
   th.style.cssText="position:relative;background:rgba(0,212,170,.07);border:2px solid var(--teal);height:100px;box-sizing:border-box;";
