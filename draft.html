@@ -1292,54 +1292,7 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
   </div>
 </div>
 <div id="page-recap" class="page" style="display:none;">
-  <div style="max-width:1000px;margin:0 auto;padding:32px 24px 80px;">
-    <!-- Sort controls -->
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--text);">Draft <span style="color:var(--teal);">Recap</span></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;" id="recap-sort-btns">
-        <button onclick="setRecapSort('order')" class="recap-sort-btn active" data-sort="order">Sale Order</button>
-        <button onclick="setRecapSort('price_desc')" class="recap-sort-btn" data-sort="price_desc">Price ↓</button>
-        <button onclick="setRecapSort('price_asc')" class="recap-sort-btn" data-sort="price_asc">Price ↑</button>
-        <button onclick="setRecapSort('owner')" class="recap-sort-btn" data-sort="owner">By Owner</button>
-        <a href="/recap.html" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.5px;padding:7px 16px;border-radius:8px;border:1px solid rgba(0,212,170,.4);background:rgba(0,212,170,.08);color:var(--teal);text-decoration:none;">↗ Share Recap</a>
-      </div>
-    </div>
-    <!-- Stats -->
-    <div id="recap-stats" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px;"></div>
-    <!-- Lots table -->
-    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px;">All Lots</div>
-    <div style="overflow-x:auto;border-radius:14px;border:1px solid var(--bdr);margin-bottom:40px;">
-      <table style="width:100%;border-collapse:collapse;background:var(--surf);">
-        <thead>
-          <tr style="background:var(--s3);">
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;width:44px;">#</th>
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;">Golfer / Group</th>
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;">Buyer</th>
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Price</th>
-          </tr>
-        </thead>
-        <tbody id="recap-lots-tbody"></tbody>
-      </table>
-    </div>
-    <!-- Spend summary -->
-    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px;">Spending Summary</div>
-    <div style="overflow-x:auto;border-radius:14px;border:1px solid var(--bdr);">
-      <table style="width:100%;border-collapse:collapse;background:var(--surf);">
-        <thead>
-          <tr style="background:var(--s3);">
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;width:44px;">#</th>
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;">Participant</th>
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Lots</th>
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Spent</th>
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Lux Tax</th>
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Total Cost</th>
-          </tr>
-        </thead>
-        <tbody id="recap-spend-tbody"></tbody>
-        <tfoot id="recap-spend-tfoot"></tfoot>
-      </table>
-    </div>
-  </div>
+  <iframe src="/recap.html" style="width:100%;flex:1;border:none;min-height:calc(100vh - 60px);" id="recap-iframe"></iframe>
 </div>
 <div id="page-htp" class="page" style="display:none;">
   <div class="htp-wrap">
@@ -2942,7 +2895,6 @@ function goTab(tab){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
   if(tab==='results') renderResults();
   if(tab==='leaderboard'){ renderLeaderboard(); if(isComm && !_leaderboardApiLoading) fetchLiveLeaderboard(); }
-  if(tab==='recap') renderRecap();
 }
 
 let _recapSort = 'order';
