@@ -140,13 +140,13 @@ nav{position:sticky;top:0;z-index:100;background:rgba(9,17,31,.9);backdrop-filte
   </div>
 
   <div class="table-wrap">
-    <div class="section-title" style="margin-bottom:16px;">All 37 Lots — Auction Order</div>
     <div style="overflow-x:auto;border-radius:16px;">
       <table class="recap-table" id="recap-table">
         <thead>
           <tr>
-            <th style="width:44px;">#</th>
+            <th style="width:44px;">Order</th>
             <th>Golfer / Group</th>
+            <th>Nominator</th>
             <th>Buyer</th>
             <th class="r">Price</th>
           </tr>
@@ -164,11 +164,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(9,17,31,.9);backdrop-filte
           <tr>
             <th style="width:44px;">#</th>
             <th>Participant</th>
-            <th class="r">Lots</th>
+            <th class="r">Golfers/Groups</th>
             <th class="r">Spent</th>
             <th class="r">Lux Tax</th>
             <th class="r">Total Cost</th>
-            <th style="width:200px;"></th>
           </tr>
         </thead>
         <tbody id="spend-tbody"></tbody>
@@ -224,8 +223,9 @@ function renderTable(){
           <span class="lot-name">${s.name}</span>
           <span class="lot-type ${isGroup ? 'group' : 'individual'}">${isGroup ? 'Group' : 'Individual'}</span>
         </div>
-        ${isGroup && memberNames ? `<div class="lot-members">${memberNames}</div>` : ''}
+        ${isGroup && memberNames ? `<div class="lot-members" style="font-size:13px;">${memberNames}</div>` : ''}
       </td>
+      <td style="font-size:14px;font-weight:600;color:var(--dim);">${s.nominatedBy || s.nomBy || '—'}</td>
       <td class="lot-owner">${s.owner || '—'}</td>
       <td class="lot-price">${fmt(s.price || 0)}</td>
     </tr>`;
@@ -241,7 +241,6 @@ function renderSpends(){
     lotsMap[o] = (lotsMap[o] || 0) + 1;
   }
   const entries = Object.entries(spendMap).sort((a,b) => b[1] - a[1]);
-  const maxSpend = entries.length ? entries[0][1] : 1;
   let totalPot = 0;
 
   const tbody = document.getElementById('spend-tbody');
@@ -249,24 +248,20 @@ function renderSpends(){
     const tax = calcTax(spent, cap);
     const total = spent + tax;
     totalPot += total;
-    const barPct = Math.round((spent / maxSpend) * 100);
-    const rankColors = ['var(--gold)', 'var(--silver)', 'var(--bronze)'];
-    const nameColor = i < 3 ? rankColors[i] : 'var(--text)';
     return `<tr>
       <td class="spend-rank">${i+1}</td>
-      <td class="spend-name" style="color:${nameColor}">${name}</td>
+      <td class="spend-name" style="color:var(--text)">${name}</td>
       <td class="spend-lots">${lotsMap[name]}</td>
       <td style="text-align:right;font-family:'DM Mono',monospace;">${fmt(spent)}</td>
       <td class="spend-tax">${tax > 0 ? '+' + fmt(tax) : '—'}</td>
       <td class="spend-total">${fmt(total)}</td>
-      <td class="spend-bar-wrap"><div class="spend-bar" style="width:${barPct}%"></div></td>
     </tr>`;
   }).join('');
 
   const tfoot = document.getElementById('spend-tfoot');
   tfoot.innerHTML = `<tr style="background:var(--s3);">
     <td colspan="2" style="padding:14px 20px;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim);">TOTAL POT</td>
-    <td style="text-align:right;font-family:'DM Mono',monospace;padding:14px 20px;color:var(--dim);">${soldData.length} lots</td>
+    <td style="text-align:right;font-family:'DM Mono',monospace;padding:14px 20px;color:var(--dim);">${soldData.length}</td>
     <td colspan="2" style="padding:14px 20px;"></td>
     <td style="text-align:right;font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--teal);padding:14px 20px;">${fmt(totalPot)}</td>
     <td></td>
@@ -286,9 +281,9 @@ function renderStats(totalPot){
   document.getElementById('stats-row').innerHTML = `
     <div class="stat-card"><div class="stat-label">Total Pot</div><div class="stat-val">${fmt(totalPot)}</div></div>
     <div class="stat-card"><div class="stat-label">Participants</div><div class="stat-val white">${participants}</div></div>
-    <div class="stat-card"><div class="stat-label">Lots Sold</div><div class="stat-val white">${soldData.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Golfers/Groups Sold</div><div class="stat-val white">${soldData.length}</div></div>
     <div class="stat-card"><div class="stat-label">Avg Price</div><div class="stat-val white">${fmt(avgPrice)}</div></div>
-    <div class="stat-card"><div class="stat-label">Top Lot</div><div class="stat-val white" style="font-size:24px;line-height:1.2;">${topLot ? topLot.name : '—'}<br><span style="font-size:16px;color:var(--teal);">${topLot ? fmt(topLot.price) : ''}</span></div></div>
+    <div class="stat-card"><div class="stat-label">Top Sale</div><div class="stat-val white" style="font-size:24px;line-height:1.2;">${topLot ? topLot.name : '—'}<br><span style="font-size:16px;color:var(--teal);">${topLot ? fmt(topLot.price) : ''}</span></div></div>
   `;
 }
 
