@@ -178,9 +178,47 @@ nav{position:sticky;top:0;z-index:100;background:rgba(9,17,31,.9);backdrop-filte
 </div>
 
 <script>
-let soldData = [];
-let cap = 100;
-let currentSort = 'order';
+// Hardcoded nominator map for 2026 PGA Championship draft
+// Rotation: Greg Martin, Larry Furst, James Arra, JP1, Wes, Steve Eglash, Brian Bruskrud, Jim Goldfarb, Evan, Brad Kaaya, Greg Abraham
+const NOMINATORS = {
+  0:  'Greg Martin',    // Scottie Scheffler
+  1:  'Larry Furst',   // Rory McIlroy
+  2:  'James Arra',    // Cameron Young
+  3:  'JP1',           // Jon Rahm
+  4:  'Wes',           // Xander Schauffele
+  5:  'Steve Eglash',  // Bryson DeChambeau
+  6:  'Brian Bruskrud',// Group 10
+  7:  'Jim Goldfarb',  // Justin Rose
+  8:  'Evan',          // Matt Fitzpatrick
+  9:  'Brad Kaaya',    // Group 6
+  10: 'Greg Abraham',  // Ludvig Aberg
+  11: 'Greg Martin',   // Viktor Hovland
+  12: 'Larry Furst',   // Brooks Koepka
+  13: 'James Arra',    // Si Woo Kim
+  14: 'JP1',           // Collin Morikawa
+  15: 'Wes',           // Tommy Fleetwood
+  16: 'Steve Eglash',  // Patrick Cantlay
+  17: 'Brian Bruskrud',// Group 5
+  18: 'Jim Goldfarb',  // Group 11
+  19: 'Evan',          // Justin Thomas
+  20: 'Brad Kaaya',    // Group 13
+  21: 'Greg Abraham',  // Russell Henley
+  22: 'Greg Martin',   // Chris Gotterup
+  23: 'Larry Furst',   // Group 2
+  24: 'James Arra',    // Group 3
+  25: 'JP1',           // Rickie Fowler
+  26: 'Wes',           // Tyrrell Hatton
+  27: 'Steve Eglash',  // Group 4
+  28: 'Brian Bruskrud',// Group 17
+  29: 'Jim Goldfarb',  // Group 8
+  30: 'Evan',          // Group 1
+  31: 'Brad Kaaya',    // Group 7
+  32: 'Greg Abraham',  // Group 14
+  33: 'Greg Martin',   // Group 9
+  34: 'Larry Furst',   // Group 12
+  35: 'James Arra',    // Group 15
+  36: 'JP1',           // Group 16
+};
 
 function calcTax(spent, cap){
   if(spent <= cap) return 0;
@@ -216,6 +254,8 @@ function renderTable(){
     const members = s.members ? (Array.isArray(s.members) ? s.members : Object.values(s.members)) : [];
     const memberNames = members.map(m => m.name || m).join(' · ');
     const lotNum = currentSort === 'order' ? (soldData.indexOf(s) + 1) : (i + 1);
+    const saleIdx = soldData.indexOf(s);
+    const nominator = NOMINATORS[saleIdx] || '—';
     return `<tr class="fade-in" style="animation-delay:${i * 0.015}s">
       <td class="lot-num">${lotNum}</td>
       <td>
@@ -225,7 +265,7 @@ function renderTable(){
         </div>
         ${isGroup && memberNames ? `<div class="lot-members" style="font-size:13px;">${memberNames}</div>` : ''}
       </td>
-      <td style="font-size:14px;font-weight:600;color:var(--dim);">${s.nominatedBy || s.nomBy || '—'}</td>
+      <td style="font-size:14px;font-weight:600;color:var(--dim);">${nominator}</td>
       <td class="lot-owner">${s.owner || '—'}</td>
       <td class="lot-price">${fmt(s.price || 0)}</td>
     </tr>`;

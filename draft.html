@@ -1078,9 +1078,9 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
   <a class="nav-logo" href="https://calcutta.cloud" style="text-decoration:none;color:inherit;line-height:1.2;"><span>2026</span> PGA Championship<br>Calcutta</a>
   <div class="nav-tab" data-tab="htp" onclick="goTab('htp')">How to Play</div>
   <div class="nav-tab" data-tab="draft" onclick="goTab('draft')">Draft</div>
+  <div class="nav-tab" data-tab="recap" onclick="goTab('recap')">Draft Recap</div>
   <div class="nav-tab" data-tab="results" onclick="goTab('results')">Results</div>
   <div class="nav-tab" data-tab="leaderboard" onclick="goTab('leaderboard')">Leaderboard</div>
-  <div class="nav-tab" data-tab="recap" onclick="goTab('recap')">Recap</div>
   <div class="nav-spacer"></div>
   <span id="comm-toggle" style="display:none;align-items:center;justify-content:center;position:absolute;left:50%;transform:translateX(-50%);pointer-events:none;flex-shrink:0;"></span>
   <div class="nav-spacer"></div>
@@ -2676,7 +2676,7 @@ function doConfirmSold(){
   const _soldMembers=_soldUnit?_soldUnit.members:[{name:team.name,seed:team.seed,odds:team.odds}];
   const _soldUnitType=_soldUnit?_soldUnit.type:'individual';
   const _soldDisplayName=_soldUnit?_soldUnit.name:team.name;
-  D.sold=[...D.sold,{teamId:D.teamId,name:_soldDisplayName,unitType:_soldUnitType,members:_soldMembers,seed:team.seed,region:team.region,owner:D.bidder,price:D.bid}];
+  D.sold=[...D.sold,{teamId:D.teamId,name:_soldDisplayName,unitType:_soldUnitType,members:_soldMembers,seed:team.seed,region:team.region,owner:D.bidder,price:D.bid,nomBy:D.nomBy||null}];
   const _soldAt=now(); D.lastSold={name:_soldDisplayName,owner:D.bidder,price:D.bid,seed:team.seed,region:team.region,soldAt:_soldAt,overlayEnd:_soldAt+5000};
   const av=availUnits().filter(u=>u.id!==D.teamId);
   D.phase=av.length===0?"complete":"nominating";
