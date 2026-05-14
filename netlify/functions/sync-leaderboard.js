@@ -7,11 +7,25 @@ const PGA_TOURN_ID = '033';
 const PGA_YEAR = '2026';
 const FIREBASE_URL = 'https://pga-championship-calcutta-default-rtdb.firebaseio.com';
 
-function gKey(name) {
-  return (name || '').toLowerCase().replace(/[^a-z0-9]/g, '_');
+function normalize(str) {
+  return (str || '')
+    .toLowerCase()
+    .replace(/ø/g, 'o')
+    .replace(/å/g, 'a')
+    .replace(/æ/g, 'ae')
+    .replace(/ü/g, 'u')
+    .replace(/ö/g, 'o')
+    .replace(/ä/g, 'a')
+    .replace(/é/g, 'e')
+    .replace(/è/g, 'e')
+    .replace(/ê/g, 'e')
+    .replace(/ñ/g, 'n')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-const ALL_GOLFERS = [
+function gKey(name) {
+  return normalize(name).replace(/[^a-z0-9]/g, '_');
+}
   // Individuals
   'Scottie Scheffler','Rory McIlroy','Cameron Young','Jon Rahm','Xander Schauffele',
   'Bryson DeChambeau','Matt Fitzpatrick','Ludvig Aberg','Tommy Fleetwood','Brooks Koepka',
@@ -89,52 +103,18 @@ exports.handler = async (event) => {
     // Build name lookup map
     const nameMap = {};
     for (const name of ALL_GOLFERS) {
-      const last = name.split(' ').pop().toLowerCase();
-      nameMap[last] = name;
-      nameMap[name.toLowerCase()] = name;
-      nameMap[name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()] = name;
+      const last = name.split(' ').pop();
+      nameMap[normalize(last)] = name;
+      nameMap[normalize(name)] = name;
     }
-    // Manual overrides for tricky names
     const overrides = {
-      'mcilroy': 'Rory McIlroy',
-      'scheffler': 'Scottie Scheffler',
-      'schauffele': 'Xander Schauffele',
-      'dechambeau': 'Bryson DeChambeau',
-      'aberg': 'Ludvig Aberg',
-      'hojgaard': 'Nicolai Hojgaard',
-      'nicolai hojgaard': 'Nicolai Hojgaard',
-      'nicolai højgaard': 'Nicolai Hojgaard',
-      'n. hojgaard': 'Nicolai Hojgaard',
-      'rasmus hojgaard': 'Rasmus Hojgaard',
-      'rasmus højgaard': 'Rasmus Hojgaard',
-      'r. hojgaard': 'Rasmus Hojgaard',
-      'knapp': 'Jake Knapp',
-      'jake knapp': 'Jake Knapp',
-      'neergaard-petersen': 'Rasmus Neergaard-Petersen',
-      'rasmus neergaard-petersen': 'Rasmus Neergaard-Petersen',
-      'bezuidenhout': 'Christiaan Bezuidenhout',
-      'christiaan bezuidenhout': 'Christiaan Bezuidenhout',
-      'im': 'Sungjae Im',
-      'sungjae im': 'Sungjae Im',
-      'matsuyama': 'Hideki Matsuyama',
-      'j.j. spaun': 'J.J. Spaun',
-      'spaun': 'J.J. Spaun',
       'jj spaun': 'J.J. Spaun',
+      'j.j. spaun': 'J.J. Spaun',
+      'jt poston': 'J.T. Poston',
       'j.t. poston': 'J.T. Poston',
-      'poston': 'J.T. Poston',
-      'min woo lee': 'Min Woo Lee',
-      'lee': 'Min Woo Lee',
-      'macintyre': 'Robert MacIntyre',
-      'robert macintyre': 'Robert MacIntyre',
-      'gotterup': 'Chris Gotterup',
-      'niemann': 'Joaquin Niemann',
-      'joaquin niemann': 'Joaquin Niemann',
-      'thorbjornsen': 'Michael Thorbjornsen',
-      'yellamaraju': 'Sudarshan Yellamaraju',
       'y e yang': 'Y E Yang',
-      'yang': 'Y E Yang',
-      'bhatia': 'Akshay Bhatia',
-      'hatton': 'Tyrrell Hatton',
+      'min woo lee': 'Min Woo Lee',
+      'robert macintyre': 'Robert MacIntyre',
     };
     for (const [k, v] of Object.entries(overrides)) nameMap[k] = v;
 
@@ -143,10 +123,10 @@ exports.handler = async (event) => {
 
     for (const p of rows) {
       const fullName = `${(p.firstName || '').trim()} ${(p.lastName || '').trim()}`.trim();
-      const ourName = nameMap[fullName.toLowerCase()]
-        || nameMap[fullName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()]
-        || nameMap[(p.lastName || '').toLowerCase()]
-        || nameMap[(p.lastName || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()];
+      const ourName = nameMap[normalize(fullName)]
+        || nameMap[normalize(p.lastName || '')]
+        || overrides[normalize(fullName)]
+        || overrides[normalize(p.lastName || '')];
 
       if (!ourName) continue;
       matched++;
