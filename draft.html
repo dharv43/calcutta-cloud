@@ -4572,22 +4572,24 @@ async function fetchLiveLeaderboard(){
     const rows = data?.leaderboardRows || [];
     if(!rows.length) throw new Error('No leaderboard data returned');
     const nameMap = {};
+    function normLocal(s){ return (s||'').toLowerCase().replace(/ø/g,'o').replace(/å/g,'a').replace(/æ/g,'ae').replace(/é/g,'e').replace(/è/g,'e').replace(/ü/g,'u').replace(/ö/g,'o').replace(/ä/g,'a').normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
     for(const g of ALL_TEAMS){
-      const last = g.name.split(' ').pop().toLowerCase();
-      nameMap[last] = g.name;
-      nameMap[g.name.toLowerCase()] = g.name;
-      nameMap[g.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()] = g.name;
+      const last = g.name.split(' ').pop();
+      nameMap[normLocal(last)] = g.name;
+      nameMap[normLocal(g.name)] = g.name;
     }
-    nameMap['jose maria olazabal'] = 'Jose Maria Olazabal';
-    nameMap['josé maría olazábal'] = 'Jose Maria Olazabal';
-    nameMap['olazabal'] = 'Jose Maria Olazabal';
-    nameMap['tyrrell hatton'] = 'Tyrrell Hatton';
-    nameMap['tyrell hatton'] = 'Tyrrell Hatton';
+    // Manual overrides
+    nameMap['j.j. spaun'] = 'J.J. Spaun';
+    nameMap['jj spaun'] = 'J.J. Spaun';
+    nameMap['j.t. poston'] = 'J.T. Poston';
+    nameMap['y.e. yang'] = 'Y E Yang';
+    nameMap['y e yang'] = 'Y E Yang';
+    nameMap['min woo lee'] = 'Min Woo Lee';
     const updates = {};
     let matched = 0;
     for(const p of rows){
       const fullName = `${(p.firstName||'').trim()} ${(p.lastName||'').trim()}`.trim();
-      const ourName = nameMap[fullName.toLowerCase()] || nameMap[(p.lastName||'').toLowerCase()];
+      const ourName = nameMap[normLocal(fullName)] || nameMap[normLocal(p.lastName||'')];
       if(!ourName) continue;
       matched++;
       const posRaw = String(p.position||'').trim();
@@ -4599,7 +4601,11 @@ async function fetchLiveLeaderboard(){
         score: (p.total||'E')==='0'?'E':(p.total||'E'),
         status: cut?'cut':'active',
         currentRound: p.currentRoundScore||null,
-        thru: p.thru||null
+        thru: p.thru||null,
+        r1: p.rounds?.find(r=>r.roundId===1||r.roundId?.['$numberInt']==='1')?.scoreToPar||null,
+        r2: p.rounds?.find(r=>r.roundId===2||r.roundId?.['$numberInt']==='2')?.scoreToPar||null,
+        r3: p.rounds?.find(r=>r.roundId===3||r.roundId?.['$numberInt']==='3')?.scoreToPar||null,
+        r4: p.rounds?.find(r=>r.roundId===4||r.roundId?.['$numberInt']==='4')?.scoreToPar||null,
       };
     }
     updates['golf/meta/roundId'] = data.roundId ? String(data.roundId) : null;
