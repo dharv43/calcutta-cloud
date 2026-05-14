@@ -4145,14 +4145,16 @@ async function renderResults(){
     return golfers.map(m=>{
       const r = m.result;
       const score = r?.score||'—';
-      const posStr = r?._displayPos||(r?.status==='cut'?'CUT':'—');
+      const wd = r?.status === 'wd';
+      const posStr = r?._displayPos||(r?.status==='cut'?'CUT':wd?'WD':'—');
+      const posColor = cut ? '#ef5350' : wd ? '#9e9e9e' : '#81c784';
       const cut = r?.status==='cut';
       const sc = scoreColor(score);
       const paidAmt = m.paid ? '$'+parseFloat(m.paid).toFixed(2) : '—';
       const paidLabel = m.paid ? paidAmt+(m.isGroup?` <span style="color:#81c784;font-size:${window.innerWidth<=768?'11px':'13px'};">(group)</span>`:'') : '—';
       return '<tr style="border-top:1px solid rgba(45,122,74,.2);">'
         +'<td style="padding:10px 14px;font-size:16px;color:'+(cut?'rgba(200,230,200,.4)':'#e8f5e9')+';'+(cut?'text-decoration:line-through;':'')+'">'+m.name+'</td>'
-        +'<td style="padding:10px 14px;text-align:left;font-size:16px;font-weight:700;color:'+(cut?'#ef5350':'#81c784')+';">'+posStr+'</td>'
+        +'<td style="padding:10px 14px;text-align:left;font-size:16px;font-weight:700;color:'+posColor+';">'+posStr+'</td>'
         +'<td style="padding:10px 14px;text-align:left;font-size:17px;font-weight:800;color:'+(cut?'rgba(200,200,200,.3)':sc)+';">'+score+'</td>'
         +'<td style="padding:10px 14px;text-align:left;font-size:15px;color:#81c784;">'+paidLabel+'</td>'
         +'</tr>';
