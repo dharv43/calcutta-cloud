@@ -26,6 +26,8 @@ function normalize(str) {
 function gKey(name) {
   return normalize(name).replace(/[^a-z0-9]/g, '_');
 }
+
+const ALL_GOLFERS = [
   // Individuals
   'Scottie Scheffler','Rory McIlroy','Cameron Young','Jon Rahm','Xander Schauffele',
   'Bryson DeChambeau','Matt Fitzpatrick','Ludvig Aberg','Tommy Fleetwood','Brooks Koepka',
@@ -113,10 +115,13 @@ exports.handler = async (event) => {
       'jt poston': 'J.T. Poston',
       'j.t. poston': 'J.T. Poston',
       'y e yang': 'Y E Yang',
+      'y.e. yang': 'Y E Yang',
       'min woo lee': 'Min Woo Lee',
       'robert macintyre': 'Robert MacIntyre',
       'jake knapp': 'Jake Knapp',
       'knapp': 'Jake Knapp',
+      'bide': 'Francisco Bide',
+      'francisco bide': 'Francisco Bide',
     };
     for (const [k, v] of Object.entries(overrides)) nameMap[k] = v;
 
