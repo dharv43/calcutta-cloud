@@ -4145,10 +4145,10 @@ async function renderResults(){
     return golfers.map(m=>{
       const r = m.result;
       const score = r?.score||'—';
-      const wd = r?.status === 'wd';
-      const posStr = r?._displayPos||(r?.status==='cut'?'CUT':wd?'WD':'—');
-      const posColor = cut ? '#ef5350' : wd ? '#9e9e9e' : '#81c784';
       const cut = r?.status==='cut';
+      const wd = r?.status === 'wd';
+      const posStr = r?._displayPos||(cut?'CUT':wd?'WD':'—');
+      const posColor = cut ? '#ef5350' : wd ? '#9e9e9e' : '#81c784';
       const sc = scoreColor(score);
       const paidAmt = m.paid ? '$'+parseFloat(m.paid).toFixed(2) : '—';
       const paidLabel = m.paid ? paidAmt+(m.isGroup?` <span style="color:#81c784;font-size:${window.innerWidth<=768?'11px':'13px'};">(group)</span>`:'') : '—';
