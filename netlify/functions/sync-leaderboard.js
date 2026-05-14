@@ -115,6 +115,8 @@ exports.handler = async (event) => {
       'y e yang': 'Y E Yang',
       'min woo lee': 'Min Woo Lee',
       'robert macintyre': 'Robert MacIntyre',
+      'jake knapp': 'Jake Knapp',
+      'knapp': 'Jake Knapp',
     };
     for (const [k, v] of Object.entries(overrides)) nameMap[k] = v;
 
