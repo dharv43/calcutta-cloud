@@ -399,15 +399,19 @@ db.ref('draft').on('value', snap => {
   updateCard(d);
 });
 
-// Load hub config (commissioner-controlled status)
+// Load hub config (commissioner-controlled status) - only used as fallback
 db.ref('hubConfig/draftStatus').on('value', snap => {
   const status = snap.val() || 'coming_soon';
-  applyStatus(status);
   const sel = document.getElementById('comm-status-select');
   if(sel) sel.value = status;
+  // Only apply hubConfig if draft hasn't started yet
+  db.ref('draft/draftStatus').once('value', dsnap => {
+    const ds = dsnap.val();
+    if(!ds || ds === 'waiting') applyStatus(status);
+  });
 });
 
-// Auto-detect live/paused/complete from actual draft state
+// Auto-detect live/paused/complete from actual draft state — always takes priority
 document.addEventListener('DOMContentLoaded', () => {
   db.ref('draft/draftStatus').on('value', snap => {
     const ds = snap.val();
@@ -425,7 +429,15 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if(ds === 'complete'){
       pill.style.display = 'inline-flex';
       pill.className = 'status-pill status-complete';
-      txt.textContent = 'Complete';
+      txt.textContent = 'Draft Complete';
+      // Also enable the enter button to view results
+      const btn = document.getElementById('enter-btn');
+      if(btn){
+        btn.classList.remove('disabled');
+        btn.innerHTML = 'View Results <span class="btn-enter-arrow">→</span>';
+        btn.href = 'draft.html#results';
+        btn.style.boxShadow = '';
+      }
     } else {
       pill.style.display = 'none';
     }
