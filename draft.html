@@ -4074,17 +4074,22 @@ async function renderResults(){
   // Leader rows
   const leaderPayouts = {'Thursday Leader': totalPot?'$'+(totalPot*0.05).toFixed(2):'—', 'Friday Leader': totalPot?'$'+(totalPot*0.05).toFixed(2):'—', 'Saturday Leader': totalPot?'$'+(totalPot*0.05).toFixed(2):'—'};
   const leaderRows = [
-    {label:'Thursday Leader',name:rnd1Leader,pct:'5.0%'},
-    {label:'Friday Leader',name:rnd2Leader,pct:'5.0%'},
-    {label:'Saturday Leader',name:rnd3Leader,pct:'5.0%'},
-  ].map(l=>`<tr>
+    {label:'Thursday Leader',name:rnd1Leader,pct:'5.0%',roundKey:'r1'},
+    {label:'Friday Leader',name:rnd2Leader,pct:'5.0%',roundKey:'r2'},
+    {label:'Saturday Leader',name:rnd3Leader,pct:'5.0%',roundKey:'r3'},
+  ].map(l=>{
+    const gKey = l.name ? l.name.toLowerCase().replace(/ø/g,'o').replace(/å/g,'a').replace(/æ/g,'ae').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'_') : null;
+    const gResult = gKey ? (gr?.[gKey] || null) : null;
+    const roundScore = gResult?.[l.roundKey] || '—';
+    return `<tr>
     <td style="${thS}">${l.label}</td>
     <td style="${tdY}">${l.name||'—'}</td>
     <td style="${tdY}">${l.name?ownerOf(l.name)||'—':'—'}</td>
-    <td style="${thS}text-align:center;color:#2d7a4a;"></td>
+    <td style="${thS}text-align:center;color:#2d7a4a;">${roundScore}</td>
     <td style="${thS}text-align:center;white-space:nowrap;">${leaderPayouts[l.label]||'—'}</td>
     <td style="${thS}text-align:center;white-space:nowrap;">${l.pct}</td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
 
   const hioOwner = hio ? ownerOf(hio) : null;
   const hioPayout = totalPot ? '$'+(totalPot*0.05).toFixed(2) : '—';
