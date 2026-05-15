@@ -4099,13 +4099,13 @@ async function renderResults(){
     <td style="${thS}">Hole-in-One</td>
     <td style="${tdY}">${hio||'—'}</td>
     <td style="${tdY}">${hioOwner||'—'}</td>
-    <td style="${thS}text-align:center;color:#2d7a4a;"></td>
+    <td style="${thS}text-align:center;color:#2d7a4a;">—</td>
     <td style="${thS}text-align:center;white-space:nowrap;">${hioPayout}</td>
     <td style="${thS}text-align:center;white-space:nowrap;">5.0%</td>
   </tr>`;
 
   const extraRows = [11,12,13,14,15].map(n=>`<tr>
-    <td style="${thS}">${n}${n===11?'st':n===12?'nd':n===13?'rd':'th'} Place*</td>
+    <td style="${thS}">${n}th Place*</td>
     <td style="${tdY}">—</td>
     <td style="${tdY}">—</td>
     <td style="${thS}text-align:center;color:#2d7a4a;">—</td>
