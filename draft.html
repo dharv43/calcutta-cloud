@@ -4080,7 +4080,7 @@ async function renderResults(){
   ].map(l=>{
     const gKey = l.name ? l.name.toLowerCase().replace(/ø/g,'o').replace(/å/g,'a').replace(/æ/g,'ae').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'_') : null;
     const gResult = gKey ? (gr?.[gKey] || null) : null;
-    const roundScore = gResult?.[l.roundKey] || '—';
+    const roundScore = gResult?.score || '—';
     return `<tr>
     <td style="${thS}">${l.label}</td>
     <td style="${tdY}">${l.name||'—'}</td>
