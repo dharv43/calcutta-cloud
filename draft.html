@@ -4080,7 +4080,14 @@ async function renderResults(){
   ].map(l=>{
     const gKey = l.name ? l.name.toLowerCase().replace(/ø/g,'o').replace(/å/g,'a').replace(/æ/g,'ae').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'_') : null;
     const gResult = gKey ? (gr?.[gKey] || null) : null;
-    const roundScore = gResult?.score || '—';
+    function parseScore(s){ if(!s||s==='—') return null; if(s==='E') return 0; return parseInt(s)||null; }
+    let roundScore = '—';
+    if(gResult){
+      const r1=parseScore(gResult.r1), r2=parseScore(gResult.r2), r3=parseScore(gResult.r3);
+      if(l.roundKey==='r1' && r1!==null) roundScore = r1===0?'E':(r1>0?'+'+r1:String(r1));
+      else if(l.roundKey==='r2' && r1!==null && r2!==null){ const t=r1+r2; roundScore=t===0?'E':(t>0?'+'+t:String(t)); }
+      else if(l.roundKey==='r3' && r1!==null && r2!==null && r3!==null){ const t=r1+r2+r3; roundScore=t===0?'E':(t>0?'+'+t:String(t)); }
+    }
     return `<tr>
     <td style="${thS}">${l.label}</td>
     <td style="${tdY}">${l.name||'—'}</td>
