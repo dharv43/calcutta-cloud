@@ -900,7 +900,7 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
   .pay-tbl td { font-size: 11px; padding: 6px 0 6px 4px; vertical-align: middle; }
   .pay-tbl tr.champ td { padding: 6px 0 6px 4px !important; border-bottom: 1px solid var(--bdr); }
   .pay-tbl th:nth-child(4), .pay-tbl td:nth-child(4) { padding-left: 6px; text-align: left; }
-  .payout-footnote { font-size: 9px; }
+  .results-footnote div { font-size: 10px !important; }
   .pay-tbl tbody tr:empty { display: none; }
   #pay-tbl { margin-bottom: 0; }
   .pay-tbl tr:last-child td { padding-bottom: 6px; }
@@ -4319,7 +4319,7 @@ async function renderResults(){
           </tbody>
         </table>
       </div>
-<div style="margin-top:12px;"><div style="font-size:13px;font-weight:700;color:#81c784;margin-bottom:4px;"><strong>*</strong> Pays only if no hole-in-one occurred</div></div>
+<div class="results-footnote" style="margin-top:12px;"><div style="font-size:13px;font-weight:700;color:#81c784;margin-bottom:4px;">*Pays only if no hole-in-one occurs</div></div>
     </div>
 
     <!-- OWNER CARDS -->
