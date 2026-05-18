@@ -4088,7 +4088,7 @@ async function renderResults(){
       else if(l.roundKey==='r2' && r1!==null && r2!==null){ const t=r1+r2; roundScore=t===0?'E':(t>0?'+'+t:String(t)); }
       else if(l.roundKey==='r3' && r1!==null && r2!==null && r3!==null){ const t=r1+r2+r3; roundScore=t===0?'E':(t>0?'+'+t:String(t)); }
     }
-    const scoreDisplay = roundScore === '—' ? '—' : `${roundScore} <span style="font-size:11px;font-weight:600;color:#6b9e7a;">(${l.thruLabel})</span>`;
+    const scoreDisplay = roundScore === '—' ? '—' : `${roundScore} <span style="font-size:13px;font-weight:600;color:#6b9e7a;">(${l.thruLabel})</span>`;
     return `<tr>
     <td style="${thS}">${l.label}</td>
     <td style="${tdY}">${l.name||'—'}</td>
@@ -4112,14 +4112,19 @@ async function renderResults(){
     <td style="${thS}text-align:center;white-space:nowrap;">5.0%</td>
   </tr>`;
 
-  const extraRows = [11,12,13,14,15].map(n=>`<tr>
+  const extraRows = [11,12,13,14,15].map(n=>{
+    const name = placements['place_'+n]||'';
+    const owner = name ? ownerOf(name)||'—' : '—';
+    const scoreVal = name ? (results[_gKey(name)]?.score||'—') : '—';
+    return `<tr>
     <td style="${thS}">${n}th Place*</td>
-    <td style="${tdY}">—</td>
-    <td style="${tdY}">—</td>
-    <td style="${thS}text-align:center;color:#2d7a4a;">—</td>
+    <td style="${tdY}">${name||'—'}</td>
+    <td style="${tdY}">${owner}</td>
+    <td style="${thS}text-align:center;color:#2d7a4a;">${scoreVal}</td>
     <td style="${thS}text-align:center;white-space:nowrap;">${extraPayout}*</td>
     <td style="${thS}text-align:center;white-space:nowrap;">1.0%*</td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
 
   // ── OWNER CARDS ──────────────────────────────────────────────
   const activeOwners = managers.filter(m=>m.name!=='Open');
@@ -4266,6 +4271,25 @@ async function renderResults(){
           <input id="inp-place-10" value="${placements.place_10||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
         </div>
       </div>
+      <div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;margin-bottom:10px;">🏆 Round Leaders & Bonus</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:16px;">
+        <div>
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Thursday Leader</label>
+          <input id="inp-rnd1" value="${rnd1Leader||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Friday Leader</label>
+          <input id="inp-rnd2" value="${rnd2Leader||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Saturday Leader</label>
+          <input id="inp-rnd3" value="${rnd3Leader||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Hole-in-One</label>
+          <input id="inp-hio" value="${hio||''}" placeholder="Leave blank if none..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+        </div>
+      </div>
       <div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;margin-bottom:10px;">🎲 11th–15th Place (if no hole-in-one)</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:16px;">
         <div>
@@ -4287,25 +4311,6 @@ async function renderResults(){
         <div>
           <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">15th Place</label>
           <input id="inp-place-15" value="${placements.place_15||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
-        </div>
-      </div>
-      <div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;margin-bottom:10px;">🏆 Round Leaders & Bonus</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:16px;">
-        <div>
-          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Thursday Leader</label>
-          <input id="inp-rnd1" value="${rnd1Leader||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
-        </div>
-        <div>
-          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Friday Leader</label>
-          <input id="inp-rnd2" value="${rnd2Leader||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
-        </div>
-        <div>
-          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Saturday Leader</label>
-          <input id="inp-rnd3" value="${rnd3Leader||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
-        </div>
-        <div>
-          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Hole-in-One</label>
-          <input id="inp-hio" value="${hio||''}" placeholder="Leave blank if none..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
         </div>
       </div>
       <button onclick="saveLeaderBonusData()" style="background:linear-gradient(135deg,#2d7a4a,#1a4a2e);border:1px solid #FFFF00;border-radius:8px;color:#FFFF00;font-size:13px;font-weight:800;padding:10px 24px;cursor:pointer;letter-spacing:.5px;">💾 Save All</button>
@@ -4343,7 +4348,7 @@ async function renderResults(){
           </tbody>
         </table>
       </div>
-<div class="results-footnote" style="margin-top:12px;"><div style="font-size:13px;font-weight:700;color:#81c784;margin-bottom:4px;">*Pays only if no hole-in-one occurs</div></div>
+<div class="results-footnote" style="margin-top:12px;"><div style="font-size:13px;font-weight:700;color:#81c784;margin-bottom:4px;">*Pays only if no holes-in-one occur</div></div>
     </div>
 
     <!-- OWNER CARDS -->
