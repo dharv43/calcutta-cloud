@@ -2158,7 +2158,7 @@ function calcTax(spent,cap){
   // $100 cap; $101-$150: 50%, $151-$200: 100%, $201-$250: 150%, $251+: 200%
   if(spent<=cap)return 0;let tax=0,rem=spent-cap;
   for(const[mx,rate]of[[50,.5],[50,1],[50,1.5],[Infinity,2]]){const c=Math.min(rem,mx);tax+=c*rate;rem-=c;if(rem<=0)break;}
-  return Math.round(tax);
+  return tax;
 }
 function getSpent(n){return D.sold.filter(s=>s.owner===n).reduce((a,s)=>a+s.price,0);}
 function getTax(n){return calcTax(getSpent(n),D.config.cap);}
@@ -3613,12 +3613,12 @@ function render(){
     }).join("")+`</tr></thead><tbody>`;
 
   const rows=[
-    ["Salary Cap",m=>`<span style="color:var(--dim2);font-weight:700;font-size:18px;font-family:system-ui,sans-serif">$${config.cap}</span>`,false],
-    ["Actual Spent",m=>{const v=getSpent(m.name);return`<span style="color:${v>config.cap?"var(--red)":"var(--text)"};font-weight:700;font-size:18px;font-family:system-ui,sans-serif">$${v}</span>`;},false],
-    ["Remaining Cap",m=>{const v=getRemainingCap(m.name);return`<span style="color:${v<=0?"var(--red)":v<50?"var(--amber)":"var(--grn)"};font-weight:700;font-size:18px;font-family:system-ui,sans-serif">$${v}</span>`;},false],
-    ["Amount Over Cap",m=>{const v=getSpent(m.name)-config.cap;return`<span style="color:${v>0?"var(--red)":"var(--dim2)"};font-weight:700;font-size:18px;font-family:system-ui,sans-serif">${v>0?`$${v}`:"—"}</span>`;},false],
-    ["Luxury Tax",m=>{const v=getTax(m.name);return`<span style="color:${v>0?"var(--amber)":"var(--dim2)"};font-weight:700;font-size:18px;font-family:system-ui,sans-serif">${v>0?`$${v}`:"—"}</span>`;},false],
-    ["Total Spent",m=>`<span style="color:var(--teal);font-weight:700;font-size:18px;font-family:system-ui,sans-serif">$${getTotal(m.name)}</span>`,true],
+    ["Salary Cap",m=>`<span style="color:var(--dim2);font-weight:700;font-size:18px;font-family:system-ui,sans-serif">$${parseFloat(config.cap).toFixed(2)}</span>`,false],
+    ["Actual Spent",m=>{const v=getSpent(m.name);return`<span style="color:${v>config.cap?"var(--red)":"var(--text)"};font-weight:700;font-size:18px;font-family:system-ui,sans-serif">$${v.toFixed(2)}</span>`;},false],
+    ["Remaining Cap",m=>{const v=getRemainingCap(m.name);return`<span style="color:${v<=0?"var(--red)":v<50?"var(--amber)":"var(--grn)"};font-weight:700;font-size:18px;font-family:system-ui,sans-serif">$${v.toFixed(2)}</span>`;},false],
+    ["Amount Over Cap",m=>{const v=getSpent(m.name)-config.cap;return`<span style="color:${v>0?"var(--red)":"var(--dim2)"};font-weight:700;font-size:18px;font-family:system-ui,sans-serif">${v>0?`$${v.toFixed(2)}`:"—"}</span>`;},false],
+    ["Luxury Tax",m=>{const v=getTax(m.name);return`<span style="color:${v>0?"var(--amber)":"var(--dim2)"};font-weight:700;font-size:18px;font-family:system-ui,sans-serif">${v>0?`$${v.toFixed(2)}`:"—"}</span>`;},false],
+    ["Total Spent",m=>`<span style="color:var(--teal);font-weight:700;font-size:18px;font-family:system-ui,sans-serif">$${getTotal(m.name).toFixed(2)}</span>`,true],
     ["Teams Owned",m=>`<span style="color:var(--pur);font-weight:700;font-size:18px;font-family:system-ui,sans-serif">${getCount(m.name)}</span>`,false],
   ];
   rows.forEach(([lbl,fn,hl])=>{
