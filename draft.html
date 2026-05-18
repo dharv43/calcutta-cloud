@@ -4074,9 +4074,9 @@ async function renderResults(){
   // Leader rows
   const leaderPayouts = {'Thursday Leader': totalPot?'$'+(totalPot*0.05).toFixed(2):'—', 'Friday Leader': totalPot?'$'+(totalPot*0.05).toFixed(2):'—', 'Saturday Leader': totalPot?'$'+(totalPot*0.05).toFixed(2):'—'};
   const leaderRows = [
-    {label:'Thursday Leader',name:rnd1Leader,pct:'5.0%',roundKey:'r1'},
-    {label:'Friday Leader',name:rnd2Leader,pct:'5.0%',roundKey:'r2'},
-    {label:'Saturday Leader',name:rnd3Leader,pct:'5.0%',roundKey:'r3'},
+    {label:'Thursday Leader',name:rnd1Leader,pct:'5.0%',roundKey:'r1',thruLabel:'thru Thu'},
+    {label:'Friday Leader',name:rnd2Leader,pct:'5.0%',roundKey:'r2',thruLabel:'thru Fri'},
+    {label:'Saturday Leader',name:rnd3Leader,pct:'5.0%',roundKey:'r3',thruLabel:'thru Sat'},
   ].map(l=>{
     const gKey = l.name ? l.name.toLowerCase().replace(/ø/g,'o').replace(/å/g,'a').replace(/æ/g,'ae').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'_') : null;
     const gResult = gKey ? (gr?.[gKey] || null) : null;
@@ -4088,11 +4088,12 @@ async function renderResults(){
       else if(l.roundKey==='r2' && r1!==null && r2!==null){ const t=r1+r2; roundScore=t===0?'E':(t>0?'+'+t:String(t)); }
       else if(l.roundKey==='r3' && r1!==null && r2!==null && r3!==null){ const t=r1+r2+r3; roundScore=t===0?'E':(t>0?'+'+t:String(t)); }
     }
+    const scoreDisplay = roundScore === '—' ? '—' : `${roundScore} <span style="font-size:11px;font-weight:600;color:#6b9e7a;">(${l.thruLabel})</span>`;
     return `<tr>
     <td style="${thS}">${l.label}</td>
     <td style="${tdY}">${l.name||'—'}</td>
     <td style="${tdY}">${l.name?ownerOf(l.name)||'—':'—'}</td>
-    <td style="${thS}text-align:center;color:#2d7a4a;">${roundScore}</td>
+    <td style="${thS}text-align:center;color:#2d7a4a;">${scoreDisplay}</td>
     <td style="${thS}text-align:center;white-space:nowrap;">${leaderPayouts[l.label]||'—'}</td>
     <td style="${thS}text-align:center;white-space:nowrap;">${l.pct}</td>
   </tr>`;
@@ -4263,6 +4264,29 @@ async function renderResults(){
         <div>
           <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">10th Place</label>
           <input id="inp-place-10" value="${placements.place_10||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+        </div>
+      </div>
+      <div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;margin-bottom:10px;">🎲 11th–15th Place (if no hole-in-one)</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:16px;">
+        <div>
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">11th Place</label>
+          <input id="inp-place-11" value="${placements.place_11||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">12th Place</label>
+          <input id="inp-place-12" value="${placements.place_12||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">13th Place</label>
+          <input id="inp-place-13" value="${placements.place_13||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">14th Place</label>
+          <input id="inp-place-14" value="${placements.place_14||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">15th Place</label>
+          <input id="inp-place-15" value="${placements.place_15||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
         </div>
       </div>
       <div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;margin-bottom:10px;">🏆 Round Leaders & Bonus</div>
@@ -4707,7 +4731,7 @@ async function saveLeaderBonusData(){
   const hio  = document.getElementById('inp-hio')?.value?.trim()||'';
   const update = {};
   const placementsToSave = {};
-  for(let i=1;i<=10;i++){
+  for(let i=1;i<=15;i++){
     const v = document.getElementById('inp-place-'+i)?.value?.trim()||'';
     placementsToSave['place_'+i] = v||null;
   }
@@ -4720,6 +4744,7 @@ async function saveLeaderBonusData(){
   update['golf/_t'] = _COMM_TOKEN;
   const allInputIds = ['inp-place-1','inp-place-2','inp-place-3','inp-place-4','inp-place-5',
     'inp-place-6','inp-place-7','inp-place-8','inp-place-9','inp-place-10',
+    'inp-place-11','inp-place-12','inp-place-13','inp-place-14','inp-place-15',
     'inp-rnd1','inp-rnd2','inp-rnd3','inp-hio'];
   const golferNames = new Set(ALL_TEAMS.map(g=>g.name));
   for(const id of allInputIds){
