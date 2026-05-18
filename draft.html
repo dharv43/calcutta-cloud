@@ -3697,7 +3697,7 @@ function render(){
   el("team-grid").innerHTML = mainHeader + indsHeader + indsHtml + groupsHeader + grpsHtml;
 
   // Pot & payouts
-  el("pot-amt").textContent=`$${pot.toLocaleString()}`; const hp=document.getElementById("hdr-pot"); if(hp) hp.textContent=`$${pot.toLocaleString()}`; const totalUnits=auctionUnits.length; const soldUnits=Object.keys(soldByUnitId).length; const remUnits=totalUnits-soldUnits; const sn=document.getElementById("sold-num"); if(sn) sn.textContent=soldUnits; const snm=document.getElementById("sold-num-mobile"); if(snm) snm.textContent=soldUnits;
+  el("pot-amt").textContent=`$${pot.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`; const hp=document.getElementById("hdr-pot"); if(hp) hp.textContent=`$${pot.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`; const totalUnits=auctionUnits.length; const soldUnits=Object.keys(soldByUnitId).length; const remUnits=totalUnits-soldUnits; const sn=document.getElementById("sold-num"); if(sn) sn.textContent=soldUnits; const snm=document.getElementById("sold-num-mobile"); if(snm) snm.textContent=soldUnits;
   el("pot-sub").textContent=`${soldUnits} sold · ${remUnits} remaining`;
   el("rem-num").textContent=remUnits; const remMob=document.getElementById("rem-num-mobile"); if(remMob) remMob.textContent=remUnits;
   let cum=0;
@@ -3830,7 +3830,7 @@ function renderMgrTeamRow(t){
   return `<tr class="${t.alive?'':'team-elim'}">
     <td class="col-name">${t.seed?`<span style="color:var(--dim);font-weight:700;margin-right:5px;">${t.seed}</span>`:''}<span class="team-name-text">${t.name}</span>${t.wlColored?` <span style="font-weight:600;margin-left:4px;">${t.wlColored}</span>`:''}
     </td>
-    <td class="col-num" style="color:var(--text);">$${t.paid}</td>
+    <td class="col-num" style="color:var(--text);">$${parseFloat(t.paid).toFixed(2)}</td>
     <td class="col-num" style="color:var(--blue-light);font-weight:800;">${t.won>0?'$'+t.won.toFixed(2):'—'}</td>
     <td class="col-num" style="color:${profitColor};font-weight:700;">${t.profit>=0?'+':''}$${t.profit.toFixed(2)}</td>
     <td class="col-num" style="color:var(--blue-light);">${t.alive&&t.potential>0?'+$'+t.potential.toFixed(2):'—'}</td>
@@ -3920,7 +3920,7 @@ function renderTeamsRows(data){
     <td class="r" style="color:var(--dim);">${t.seed||'—'}</td>
     <td style="font-weight:700;text-align:left;${t.alive?'':'color:var(--dim);text-decoration:line-through;text-decoration-color:var(--dim);'}">${t.displayName||t.name}</td>
     <td style="text-align:left;color:var(--text);">${t.owner}</td>
-    <td class="r">$${t.cost}</td>
+    <td class="r">$${parseFloat(t.cost).toFixed(2)}</td>
     <td class="r" style="font-weight:800;color:var(--blue-light);">${t.winnings>0?'$'+t.winnings.toFixed(2):'—'}</td>
     <td class="r" style="font-weight:700;color:${profitColor};">${tProfit>=0?'+':''}$${tProfit.toFixed(2)}</td>
     <td class="r" style="font-weight:700;color:var(--blue-light);">${t.alive?'$'+t.potential.toFixed(2):'—'}</td>
