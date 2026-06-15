@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -306,6 +305,42 @@ footer{
 
 <div class="events-section">
 
+  <!-- US Open Card -->
+  <div class="event-card" id="usopen-card" style="margin-bottom:24px;">
+    <div class="event-card-top" style="flex-direction:column;align-items:center;text-align:center;">
+      <div class="event-meta">
+        <div class="event-tag">⛳ Golf · Major</div>
+        <div class="event-name" style="font-size:64px;">2026 US Open</div>
+        <div class="event-subtitle" style="font-size:14px;">Shinnecock Hills Golf Club</div>
+        <div class="event-subtitle" style="font-size:14px;margin-top:4px;">Southampton, NY</div>
+        <div style="margin-top:14px;min-height:32px;display:flex;justify-content:center;">
+          <div class="status-pill status-coming-soon" id="usopen-status-pill" style="display:none;">
+            <span class="status-dot"></span>
+            <span id="usopen-status-text">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="event-card-body">
+      <div class="event-stats" style="justify-content:center;width:100%;">
+        <div class="event-stat" style="text-align:center;">
+          <div class="event-stat-label">Total Pot</div>
+          <div class="event-stat-val teal" id="usopen-stat-pot">—</div>
+        </div>
+        <div class="event-stat" style="text-align:center;">
+          <div class="event-stat-label">Participants</div>
+          <div class="event-stat-val" id="usopen-stat-participants">—</div>
+        </div>
+      </div>
+      <div class="event-actions" style="width:100%;justify-content:center;margin-top:8px;">
+        <a href="usopen.html" class="btn-enter" id="usopen-enter-btn">
+          Enter Draft <span class="btn-enter-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PGA Championship Card -->
   <div class="event-card" id="event-card">
     <div class="event-card-top" style="flex-direction:column;align-items:center;text-align:center;">
       <div class="event-meta">
@@ -355,41 +390,6 @@ footer{
       </div>
       <button class="comm-btn" onclick="saveStatus()">Save Status</button>
       <div class="comm-save-msg" id="comm-save-msg">✅ Saved!</div>
-    </div>
-  </div>
-
-  <!-- US Open Card -->
-  <div class="event-card" id="usopen-card" style="margin-top:24px;">
-    <div class="event-card-top" style="flex-direction:column;align-items:center;text-align:center;">
-      <div class="event-meta">
-        <div class="event-tag">⛳ Golf · Major</div>
-        <div class="event-name" style="font-size:64px;">2026 US Open</div>
-        <div class="event-subtitle" style="font-size:14px;">Shinnecock Hills Golf Club</div>
-        <div class="event-subtitle" style="font-size:14px;margin-top:4px;">Southampton, NY</div>
-        <div style="margin-top:14px;min-height:32px;display:flex;justify-content:center;">
-          <div class="status-pill status-coming-soon" id="usopen-status-pill" style="display:none;">
-            <span class="status-dot"></span>
-            <span id="usopen-status-text">Coming Soon</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="event-card-body">
-      <div class="event-stats" style="justify-content:center;width:100%;">
-        <div class="event-stat" style="text-align:center;">
-          <div class="event-stat-label">Total Pot</div>
-          <div class="event-stat-val teal" id="usopen-stat-pot">—</div>
-        </div>
-        <div class="event-stat" style="text-align:center;">
-          <div class="event-stat-label">Participants</div>
-          <div class="event-stat-val" id="usopen-stat-participants">—</div>
-        </div>
-      </div>
-      <div class="event-actions" style="width:100%;justify-content:center;margin-top:8px;">
-        <a href="usopen.html" class="btn-enter" id="usopen-enter-btn">
-          Enter Draft <span class="btn-enter-arrow">→</span>
-        </a>
-      </div>
     </div>
   </div>
 
