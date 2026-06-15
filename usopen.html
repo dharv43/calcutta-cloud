@@ -5056,12 +5056,56 @@ setTimeout(()=>{ initChat(); }, 1000);
     }, {passive:false});
     document.addEventListener('touchmove', e=>{
   if(!_dragging) return;
-  const dy = _startY - e.touches[0].clientY; // drag up = positive = taller
+  const dy = _startY - e.touches[0].clientY;
   const newH = Math.min(MAX_H, Math.max(MIN_H, _startH + dy));
   panel.style.height = newH + 'px';
   e.preventDefault();
     }, {passive:false});
     document.addEventListener('touchend', ()=>{ _dragging = false; });
+  });
+})();
+
+// ── CHAT BUBBLE DRAG TO MOVE (desktop) ────────────────────────
+(function(){
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const bubble = document.getElementById('chat-bubble');
+    const btn = document.getElementById('chat-toggle-btn');
+    if(!bubble || !btn) return;
+    let dragging = false, startX = 0, startY = 0, startRight = 18, startBottom = 18;
+
+    btn.addEventListener('mousedown', e=>{
+      if(window.innerWidth <= 768) return;
+      dragging = false; // will set true on move
+      startX = e.clientX;
+      startY = e.clientY;
+      const rect = bubble.getBoundingClientRect();
+      startRight = window.innerWidth - rect.right;
+      startBottom = window.innerHeight - rect.bottom;
+      bubble._isDragging = false;
+
+      const onMove = e2 => {
+        const dx = e2.clientX - startX;
+        const dy = e2.clientY - startY;
+        if(!bubble._isDragging && Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+        bubble._isDragging = true;
+        const newRight = Math.max(8, Math.min(window.innerWidth - 60, startRight - dx));
+        const newBottom = Math.max(8, Math.min(window.innerHeight - 60, startBottom - dy));
+        bubble.style.right = newRight + 'px';
+        bubble.style.bottom = newBottom + 'px';
+        e2.preventDefault();
+      };
+      const onUp = () => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+
+    // prevent click from firing if we dragged
+    btn.addEventListener('click', e=>{
+      if(bubble._isDragging){ bubble._isDragging = false; e.stopImmediatePropagation(); }
+    }, true);
   });
 })();
 
