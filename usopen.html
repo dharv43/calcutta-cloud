@@ -1454,16 +1454,20 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
     <!-- Tiebreakers -->
     <div class="htp-section">
   <div class="htp-section-title">🔀 Tiebreakers</div>
+  <div class="htp-item" style="margin-bottom:16px;"><span class="htp-bullet">&#8594;</span><span>Tiebreakers apply to <span class="htp-highlight htp-amber">final placements only</span> (1st–15th place). <strong>Thursday, Friday, and Saturday round leader payouts have no tiebreaker</strong> — if multiple golfers are tied for the lead at the end of that round, the commissioner will determine the winner using most birdies.</span></div>
   <div style="font-size:14px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">After Round 1 (Thursday)</div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Thursday most birdies or better</span></div>
   <div class="htp-item" style="margin-bottom:18px;"><span class="htp-bullet">&#8594;</span><span>Thursday fewest putts</span></div>
   <div style="font-size:14px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">After Round 2 (Friday)</div>
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Friday round score (lowest score on Friday wins the tiebreaker)</span></div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Friday most birdies or better</span></div>
   <div class="htp-item" style="margin-bottom:18px;"><span class="htp-bullet">&#8594;</span><span>Friday fewest putts</span></div>
   <div style="font-size:14px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">After Round 3 (Saturday)</div>
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Saturday round score (lowest score on Saturday wins the tiebreaker)</span></div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Saturday most birdies or better</span></div>
   <div class="htp-item" style="margin-bottom:18px;"><span class="htp-bullet">&#8594;</span><span>Saturday fewest putts</span></div>
   <div style="font-size:14px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Final (Sunday)</div>
+  <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Sunday round score (lowest score on Sunday wins the tiebreaker)</span></div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Sunday most birdies or better</span></div>
   <div class="htp-item"><span class="htp-bullet">&#8594;</span><span>Sunday fewest putts</span></div>
     </div>
@@ -3590,10 +3594,10 @@ function render(){
       font-style:${m.name==='Open'?'italic':'normal'};
       font-family:inherit;font-size:12px;font-weight:${m.name==='Open'?'400':'700'};
       text-align:center;outline:none;
-      width:100%;min-width:30px;box-sizing:border-box;cursor:${isComm||(myName&&m.name.toLowerCase()===myName.toLowerCase()&&draftStatus==='waiting')?'text':'default'};padding:2px 2px;
-      pointer-events:${isComm||(myName&&m.name.toLowerCase()===myName.toLowerCase()&&draftStatus==='waiting')?'auto':'none'};"
+      width:100%;min-width:30px;box-sizing:border-box;cursor:${isComm||(myName&&m.name.toLowerCase()===myName.toLowerCase()&&draftStatus==='waiting')?'text':m.name==='Open'?'default':'pointer'};padding:2px 2px;
+      pointer-events:${isComm||(myName&&m.name.toLowerCase()===myName.toLowerCase()&&draftStatus==='waiting')?'auto':m.name==='Open'?'none':'auto'};"
     autocomplete="off"
-    ${isComm||( myName&&m.name.toLowerCase()===myName.toLowerCase()&&draftStatus==="waiting")?`onfocus="this._orig=this.value;this.select()" onblur="renameMgr(this._orig,this.value,parseInt(this.dataset.mgrInp))" onkeydown="handleMgrKeydown(event,${i})"`:``}/>
+    ${isComm||(myName&&m.name.toLowerCase()===myName.toLowerCase()&&draftStatus==="waiting")?`onfocus="this._orig=this.value;this.select()" onblur="renameMgr(this._orig,this.value,parseInt(this.dataset.mgrInp))" onkeydown="handleMgrKeydown(event,${i})"`:m.name!=='Open'?`onclick="showTeamModal('${m.name.replace(/'/g,"\\'")}')"`:`}`}/>
       ${isL?`<span class="mgr-crown">👑</span>`:""}
     </div>
     <div style="position:absolute;bottom:0;left:0;right:0;height:22px;display:flex;align-items:center;justify-content:center;">
@@ -5101,7 +5105,62 @@ function toggleMgrCard(cardId){
   </button>
 </div>
 
-</body>
+<!-- Team Modal -->
+<div id="team-modal" onclick="if(event.target===this)closeTeamModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:var(--surf);border:1px solid var(--bdr2);border-radius:20px;max-width:480px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.6);">
+    <div style="padding:20px 24px 16px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surf);border-radius:20px 20px 0 0;">
+      <div>
+        <div id="team-modal-name" style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--text);line-height:1;"></div>
+        <div id="team-modal-stats" style="font-size:12px;color:var(--dim);margin-top:4px;"></div>
+      </div>
+      <button onclick="closeTeamModal()" style="background:var(--s3);border:1px solid var(--bdr);border-radius:8px;color:var(--dim);font-size:18px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+    </div>
+    <div id="team-modal-list" style="padding:16px 24px 24px;"></div>
+  </div>
+</div>
+
+<script>
+function showTeamModal(name){
+  const modal = document.getElementById('team-modal');
+  const nameEl = document.getElementById('team-modal-name');
+  const statsEl = document.getElementById('team-modal-stats');
+  const listEl = document.getElementById('team-modal-list');
+  if(!modal||!D||!D.sold) return;
+
+  const myTeams = D.sold.filter(s=>s.owner===name);
+  const spent = getSpent(name);
+  const tax = getTax(name);
+  const total = getTotal(name);
+
+  nameEl.textContent = name + "'s Team";
+  statsEl.textContent = `${myTeams.length} lot${myTeams.length!==1?'s':''} · $${spent.toFixed(2)} spent${tax>0?' + $'+tax.toFixed(2)+' tax':''} · $${total.toFixed(2)} total`;
+
+  if(myTeams.length === 0){
+    listEl.innerHTML = '<div style="color:var(--dim);font-size:14px;text-align:center;padding:24px 0;">No golfers acquired yet.</div>';
+  } else {
+    listEl.innerHTML = myTeams.map(s => {
+      const isGroup = s.unitType==='group'||(s.members&&(Array.isArray(s.members)?s.members:Object.values(s.members)).length>1);
+      const members = s.members?(Array.isArray(s.members)?s.members:Object.values(s.members)):[];
+      const memberNames = members.map(m=>m.name||m).join(', ');
+      const flag = GOLFER_NATIONALITY[s.name]||'';
+      return `<div style="padding:12px 0;border-bottom:1px solid var(--bdr);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <div style="flex:1;">
+          <div style="font-size:15px;font-weight:700;color:var(--text);">${flag?flag+' ':''}${s.name} <span style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-left:4px;vertical-align:middle;background:${isGroup?'rgba(0,212,170,.1)':'rgba(99,102,241,.15)'};color:${isGroup?'var(--teal)':'#818cf8'};">${isGroup?'Group':'Indiv.'}</span></div>
+          ${isGroup&&memberNames?`<div style="font-size:12px;color:var(--dim);margin-top:3px;line-height:1.5;">${memberNames}</div>`:''}
+        </div>
+        <div style="font-size:16px;font-weight:900;color:var(--teal);white-space:nowrap;font-family:'DM Mono',monospace;">$${(s.price||0).toFixed(2)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeTeamModal(){
+  document.getElementById('team-modal').style.display = 'none';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeTeamModal(); });
+</script>
 </html>
 
   <div class="draft-body">
