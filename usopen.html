@@ -264,7 +264,8 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
 .nom-inp:focus{border-color:var(--blue);}
 
 /* ── MANAGER TABLE ── */
-.mgr-wrap{overflow-x:auto;overflow-y:visible;border-bottom:1px solid var(--bdr);}
+.mgr-wrap{overflow-x:auto;overflow-y:visible;border-bottom:1px solid var(--bdr);position:relative;}
+.mgr-wrap-hint{display:none;text-align:right;font-size:11px;color:var(--dim);padding:4px 12px 2px;letter-spacing:.5px;font-weight:600;}
 .mgr-tbl{width:max-content;min-width:100%;border-collapse:collapse;background:var(--surf);}
 .mgr-tbl th{font-size:21px;font-weight:700;padding:0;text-align:center;height:100px;box-sizing:border-box;vertical-align:top;min-width:75px;width:75px;
   border:1px solid var(--bdr);white-space:nowrap;background:var(--s2);color:var(--text);position:relative;}
@@ -281,26 +282,28 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
   letter-spacing:.5px;padding:1px 6px;border-radius:4px;line-height:1.1;pointer-events:none;}
 .mgr-tbl td{padding:9px 10px;text-align:center;border:1px solid var(--bdr);font-size:18px;white-space:nowrap;}
 .mgr-tbl td.lbl{background:var(--s2);text-align:left;padding-left:16px;
-  font-size:14px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+  font-size:14px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  position:sticky;left:0;z-index:2;}
 .mgr-tbl td.lbl.hl{background:rgba(0,212,170,.06);color:var(--teal);border-left:3px solid var(--teal);}
 .mgr-tbl td.hl-cell{background:rgba(0,212,170,.03);}
 .sub-tag{font-size:9px;opacity:.65;font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;display:block;}
 
 /* ── TEAM GRID ── */
 .team-grid{display:flex;flex-direction:column;border-top:1px solid var(--bdr);}
-.individuals-row{display:grid;grid-template-columns:repeat(6,1fr);align-items:start;border:2px solid var(--bdr2);}
+.individuals-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-items:start;border:2px solid var(--bdr2);}
+
 .ind-item{display:flex;flex-direction:column;justify-content:space-between;padding:10px 14px;border:2px solid var(--bdr2);cursor:pointer;height:72px;box-sizing:border-box;overflow:hidden;background:var(--surf);}
 .ind-item:hover{background:rgba(99,102,241,.1);}
 @media(hover:hover){.grp-col:hover{background:rgba(99,102,241,.1);cursor:pointer;}}
 .ind-item.is-sold{background:rgba(239,68,68,.18);cursor:default;}
 .ind-item.is-bidding{background:rgba(0,212,170,.08);animation:rowBlink 1s infinite;}
 .ind-item-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.ind-item-name{font-size:17px;font-weight:600;color:var(--text);white-space:nowrap;flex:1;min-width:0;}
-.ind-item-odds{font-size:15px;font-weight:700;color:var(--amber);white-space:nowrap;}
+.ind-item-name{font-size:17px;font-weight:600;color:var(--text);white-space:nowrap;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;}
+.ind-item-odds{font-size:15px;font-weight:700;color:var(--amber);white-space:nowrap;flex-shrink:0;}
 .ind-item-bottom{display:flex;align-items:center;gap:6px;min-height:20px;margin-top:6px;padding-top:6px;border-top:1px dotted var(--bdr2);}
-.ind-item-owner{font-size:15px;color:var(--teal);font-weight:700;white-space:nowrap;}
-.ind-item-price{font-size:15px;color:var(--dim);white-space:nowrap;}
-.groups-row{display:grid;grid-template-columns:repeat(6,1fr);border:2px solid var(--bdr2);}
+.ind-item-owner{font-size:15px;color:var(--teal);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;}
+.ind-item-price{font-size:15px;color:var(--dim);white-space:nowrap;flex-shrink:0;}
+.groups-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border:2px solid var(--bdr2);}
 .grp-col{border:2px solid var(--bdr2);background:var(--surf);padding:12px 14px;}
 .grp-col:last-child{border-right:none;}
 .grp-col.is-sold{background:rgba(239,68,68,.18);}
@@ -822,8 +825,8 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
   .htp-hero h1 { font-size: 22px; }
 }
 @media (min-width: 769px) and (max-width: 1024px) {
-  .individuals-row { grid-template-columns: repeat(1,1fr) !important; }
-  .groups-row { grid-template-columns: repeat(1,1fr) !important; }
+  .individuals-row { grid-template-columns: repeat(3,1fr) !important; }
+  .groups-row { grid-template-columns: repeat(3,1fr) !important; }
   .t-owner { font-size: 11px; font-weight: 600; text-align: right; white-space: nowrap; }
   .t-price { font-size: 11px; font-weight: 600; color: var(--text); text-align: right; white-space: nowrap; }
   .draft-inner { min-width: 600px; }
@@ -831,6 +834,11 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
   .htp-wrap { padding: 28px 20px; }
   .htp-hero h1 { font-size: 34px; }
   .bottom-bar { grid-template-columns: 180px 1fr 120px; }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  .individuals-row { grid-template-columns: repeat(4,1fr) !important; }
+  .groups-row { grid-template-columns: repeat(4,1fr) !important; }
 }
 
 
@@ -1230,6 +1238,7 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
   </div>
 
   <!-- Manager table -->
+  <div class="mgr-wrap-hint" id="mgr-scroll-hint">scroll to see more →</div>
   <div class="mgr-wrap"><table class="mgr-tbl" id="mgr-tbl"></table></div>
 
   <!-- Team grid -->
@@ -5040,7 +5049,25 @@ function sendChat(){
 setTimeout(()=>{ initChat(); }, 1000);
 
 
-// ── CHAT DRAG TO RESIZE (mobile) ──────────────────────────────
+// ── SCROLL HINT ───────────────────────────────────────────────
+(function(){
+  function checkScroll(){
+    const wrap = document.querySelector('.mgr-wrap');
+    const hint = document.getElementById('mgr-scroll-hint');
+    if(!wrap||!hint) return;
+    hint.style.display = wrap.scrollWidth > wrap.clientWidth ? 'block' : 'none';
+  }
+  document.addEventListener('DOMContentLoaded', ()=>{
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+    const wrap = document.querySelector('.mgr-wrap');
+    if(wrap) wrap.addEventListener('scroll', ()=>{
+      const hint = document.getElementById('mgr-scroll-hint');
+      if(hint) hint.style.display = (wrap.scrollLeft < wrap.scrollWidth - wrap.clientWidth - 10) ? 'block' : 'none';
+    });
+  });
+  setTimeout(checkScroll, 1000);
+})();
 (function(){
   const MIN_H = 200, MAX_H = Math.round(window.innerHeight * 0.75);
   let _dragging = false, _startY = 0, _startH = 0;
