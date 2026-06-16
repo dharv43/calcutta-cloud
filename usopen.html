@@ -1309,11 +1309,10 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
       <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);">All Golfers &amp; Groups</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button onclick="setRecapSort('order')" class="recap-sort-btn active" data-sort="order">Sale Order</button>
-        <button onclick="setRecapSort('price_desc')" class="recap-sort-btn" data-sort="price_desc">Price ↓</button>
-        <button onclick="setRecapSort('price_asc')" class="recap-sort-btn" data-sort="price_asc">Price ↑</button>
+        <button onclick="setRecapSort('order')" class="recap-sort-btn active" data-sort="order" id="sort-order-btn">Sale Order ↓</button>
+        <button onclick="togglePriceSort()" class="recap-sort-btn" id="sort-price-btn" data-sort="price_desc">Price ↓</button>
         <button onclick="setRecapSort('owner')" class="recap-sort-btn" data-sort="owner">By Owner</button>
-        <a href="/usopen-recap.html" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.5px;padding:7px 16px;border-radius:8px;border:1px solid rgba(0,212,170,.4);background:rgba(0,212,170,.08);color:var(--teal);text-decoration:none;">↗ Share</a>
+        <a href="#" onclick="navigator.clipboard.writeText(window.location.href);this.textContent='✓ Copied!';setTimeout(()=>this.textContent='↗ Share',1500);return false;" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.5px;padding:7px 16px;border-radius:8px;border:1px solid rgba(0,212,170,.4);background:rgba(0,212,170,.08);color:var(--teal);text-decoration:none;">↗ Share</a>
       </div>
     </div>
     <!-- Lots table -->
@@ -1337,11 +1336,9 @@ const _COMM_TOKEN = 'knf123213on2422ewr23523goneirg24t45sdf34sdfsg6346qw';
       <table style="width:100%;border-collapse:collapse;background:var(--surf);">
         <thead>
           <tr style="background:var(--s3);">
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;width:44px;">#</th>
             <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:left;">Participant</th>
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Golfers/Groups</th>
             <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Spent</th>
-            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Lux Tax</th>
+            <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Luxury Tax</th>
             <th style="padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:right;">Total Cost</th>
           </tr>
         </thead>
@@ -2955,6 +2952,24 @@ let _recapSort = 'order';
 function setRecapSort(s){
   _recapSort = s;
   document.querySelectorAll('.recap-sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort===s));
+  // Update order button arrow
+  const orderBtn = document.getElementById('sort-order-btn');
+  if(orderBtn) orderBtn.textContent = 'Sale Order ↓';
+  renderRecapLots();
+}
+
+function togglePriceSort(){
+  const btn = document.getElementById('sort-price-btn');
+  if(_recapSort === 'price_desc'){
+    _recapSort = 'price_asc';
+    if(btn){ btn.dataset.sort='price_asc'; btn.textContent='Price ↑'; }
+  } else {
+    _recapSort = 'price_desc';
+    if(btn){ btn.dataset.sort='price_desc'; btn.textContent='Price ↓'; }
+  }
+  document.querySelectorAll('.recap-sort-btn').forEach(b => b.classList.toggle('active', b===btn));
+  const orderBtn = document.getElementById('sort-order-btn');
+  if(orderBtn) orderBtn.classList.remove('active');
   renderRecapLots();
 }
 
@@ -3018,20 +3033,16 @@ function renderRecapSpends(){
     const total=spent+tax;
     totalPot+=total;
     return `<tr style="border-top:1px solid var(--bdr);">
-      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:12px;color:var(--dim);">${i+1}</td>
       <td style="padding:11px 16px;font-size:14px;font-weight:700;color:var(--text);">${name}</td>
-      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:13px;color:var(--dim);text-align:right;">${lotsMap[name]}</td>
-      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:14px;text-align:right;">$${spent.toFixed(2)}</td>
-      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:13px;color:var(--red);text-align:right;">${tax>0?'+$'+tax.toFixed(2):'—'}</td>
+      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;text-align:right;">$${spent.toFixed(2)}</td>
+      <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:${tax>0?'var(--red)':'var(--dim)'};text-align:right;">${tax>0?'+$'+tax.toFixed(2):'—'}</td>
       <td style="padding:11px 16px;font-family:'DM Mono',monospace;font-size:15px;font-weight:900;color:var(--teal);text-align:right;">$${total.toFixed(2)}</td>
     </tr>`;
   }).join('');
   const tfoot=document.getElementById('recap-spend-tfoot');
   if(tfoot) tfoot.innerHTML=`<tr style="background:var(--s3);">
-    <td colspan="2" style="padding:14px 16px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);">TOTAL POT</td>
-    <td style="padding:14px 16px;font-family:'DM Mono',monospace;color:var(--dim);text-align:right;">${sold.length} lots</td>
-    <td colspan="2" style="padding:14px 16px;"></td>
-    <td style="padding:14px 16px;font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--teal);text-align:right;">$${totalPot.toFixed(2)}</td>
+    <td colspan="1" style="padding:14px 16px;font-size:14px;font-weight:900;letter-spacing:.5px;color:var(--teal);text-align:center;">Total Pot: $${totalPot.toFixed(2)}</td>
+    <td colspan="3" style="padding:14px 16px;"></td>
   </tr>`;
 }
 
