@@ -265,12 +265,13 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
 
 /* ── MANAGER TABLE ── */
 .mgr-wrap{overflow-x:auto;overflow-y:visible;border-bottom:1px solid var(--bdr);position:relative;}
-.mgr-wrap-hint{display:none;text-align:right;font-size:11px;color:var(--dim);padding:4px 12px 2px;letter-spacing:.5px;font-weight:600;}
+.mgr-wrap-hint{display:block;text-align:right;font-size:11px;color:var(--dim);padding:4px 12px 2px;letter-spacing:.5px;font-weight:600;min-height:20px;}
 .mgr-tbl{width:max-content;min-width:100%;border-collapse:collapse;background:var(--surf);}
 .mgr-tbl th{font-size:21px;font-weight:700;padding:0;text-align:center;height:100px;box-sizing:border-box;vertical-align:top;min-width:75px;width:75px;
   border:1px solid var(--bdr);white-space:nowrap;background:var(--s2);color:var(--text);position:relative;}
 .mgr-tbl th input{font-size:8px;}.mgr-tbl th.lbl-col{font-size:14px;text-align:left;padding:8px 16px;
-  color:var(--dim);text-transform:uppercase;letter-spacing:.5px;width:1%;min-width:0;white-space:nowrap;vertical-align:middle;}
+  color:var(--dim);text-transform:uppercase;letter-spacing:.5px;width:1%;min-width:0;white-space:nowrap;vertical-align:middle;
+  position:sticky;left:0;z-index:3;background:var(--s2);}
 .mgr-tbl th.is-nom{border:2px solid var(--amber);}
 .mgr-bid-display{font-size:16px;font-weight:800;color:var(--dim);letter-spacing:.3px;line-height:1;}
 .mgr-bid-display.mgr-bid-leading{color:var(--grn);}
@@ -3590,7 +3591,8 @@ function render(){
   const showNom = isN && (draftStatus==="live"||draftStatus==="paused") && phase!=="complete";
   const showTimer = isN && (draftStatus==="live"||draftStatus==="paused") && phase!=="complete" && phase==="nominating" && (nomTimeLeft===null||nomTimeLeft>0);
   return`<th class="${thCls}" style="position:relative;" data-mgr-idx="${i}">
-    ${isComm?`<button onclick="removeManager(${i})" title="Remove ${escapedName}" style="position:absolute;bottom:4px;right:4px;background:var(--red);border:none;cursor:pointer;color:#fff;font-size:14px;font-weight:900;line-height:1;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0;opacity:0.75;transition:opacity .15s;z-index:2;" onmouseover="this.style.opacity=1;this.style.transform='scale(1.1)'" onmouseout="this.style.opacity=0.75;this.style.transform='scale(1)'">−</button>`:""}
+    ${isComm?`<button onclick="removeManager(${i})" title="Remove ${escapedName}" style="position:absolute;bottom:4px;right:4px;background:var(--red);border:none;cursor:pointer;color:#fff;font-size:14px;font-weight:900;line-height:1;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0;opacity:0.75;transition:opacity .15s;z-index:5;" onmouseover="this.style.opacity=1;this.style.transform='scale(1.1)'" onmouseout="this.style.opacity=0.75;this.style.transform='scale(1)'">−</button>`:""}
+    ${isComm&&m.name!=='Open'?`<button onclick="showTeamModal('${m.name.replace(/'/g,"\\'")}');event.stopPropagation();" title="View team" style="position:absolute;bottom:4px;left:4px;background:none;border:none;cursor:pointer;font-size:13px;color:var(--dim);padding:2px;line-height:1;opacity:0.6;z-index:5;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">👁</button>`:''}
     ${showNom?`<span class="nom-badge" style="position:absolute;top:4px;left:4px;right:auto;width:auto;display:inline-block;z-index:2;">NOM</span>`:""}
     <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:22px 6px 22px 6px;box-sizing:border-box;">
       <input value="${m.name}"
@@ -3607,7 +3609,6 @@ function render(){
       pointer-events:${isComm||(myName&&m.name.toLowerCase()===myName.toLowerCase()&&draftStatus==='waiting')?'auto':m.name==='Open'?'none':'auto'};"
     autocomplete="off"
     ${isComm||(myName&&m.name.toLowerCase()===myName.toLowerCase()&&draftStatus==="waiting")?`onfocus="this._orig=this.value;this.select()" onblur="renameMgr(this._orig,this.value,parseInt(this.dataset.mgrInp))" onkeydown="handleMgrKeydown(event,${i})"`:m.name!=='Open'?`onclick="showTeamModal('${m.name.replace(/'/g,"\\'")}')"`:`}`}/>
-      ${isComm&&m.name!=='Open'?`<button onclick="showTeamModal('${m.name.replace(/'/g,"\\'")}');event.stopPropagation();" title="View team" style="position:absolute;bottom:4px;left:4px;background:none;border:none;cursor:pointer;font-size:13px;color:var(--dim);padding:2px;line-height:1;opacity:0.6;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">👁</button>`:''}
       ${isL?`<span class="mgr-crown">👑</span>`:""}
     </div>
     <div style="position:absolute;bottom:0;left:0;right:0;height:22px;display:flex;align-items:center;justify-content:center;">
@@ -5055,7 +5056,7 @@ setTimeout(()=>{ initChat(); }, 1000);
     const wrap = document.querySelector('.mgr-wrap');
     const hint = document.getElementById('mgr-scroll-hint');
     if(!wrap||!hint) return;
-    hint.style.display = wrap.scrollWidth > wrap.clientWidth ? 'block' : 'none';
+    hint.textContent = wrap.scrollWidth > wrap.clientWidth ? 'scroll to see more →' : '';
   }
   document.addEventListener('DOMContentLoaded', ()=>{
     checkScroll();
@@ -5063,7 +5064,7 @@ setTimeout(()=>{ initChat(); }, 1000);
     const wrap = document.querySelector('.mgr-wrap');
     if(wrap) wrap.addEventListener('scroll', ()=>{
       const hint = document.getElementById('mgr-scroll-hint');
-      if(hint) hint.style.display = (wrap.scrollLeft < wrap.scrollWidth - wrap.clientWidth - 10) ? 'block' : 'none';
+      if(hint) hint.textContent = (wrap.scrollLeft < wrap.scrollWidth - wrap.clientWidth - 10) ? 'scroll to see more →' : '';
     });
   });
   setTimeout(checkScroll, 1000);
@@ -5197,15 +5198,14 @@ function showTeamModal(name){
   const nameEl = document.getElementById('team-modal-name');
   const statsEl = document.getElementById('team-modal-stats');
   const listEl = document.getElementById('team-modal-list');
-  if(!modal||!D||!D.sold) return;
+  if(!modal) return;
 
-  const myTeams = D.sold.filter(s=>s.owner===name);
-  const spent = getSpent(name);
-  const tax = getTax(name);
-  const total = getTotal(name);
+  const myTeams = (D&&D.sold) ? D.sold.filter(s=>s.owner===name) : [];
+  const spent = D ? getSpent(name) : 0;
+  const tax = D ? getTax(name) : 0;
 
   nameEl.textContent = name + "'s Team";
-  statsEl.textContent = `$${spent.toFixed(2)} spent${tax>0?' + $'+tax.toFixed(2)+' tax':''}`;
+  statsEl.textContent = spent > 0 ? `$${spent.toFixed(2)} spent${tax>0?' + $'+tax.toFixed(2)+' tax':''}` : '';
 
   if(myTeams.length === 0){
     listEl.innerHTML = '<div style="color:var(--dim);font-size:14px;text-align:center;padding:24px 0;">No golfers acquired yet.</div>';
