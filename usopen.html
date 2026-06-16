@@ -370,7 +370,7 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
 .nav-tab:hover{color:var(--text);}
 .nav-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
 .nav-spacer{display:none;} .rem-sec-mobile{display:none;}
-.nav-right{display:flex;align-items:center;gap:16px;font-size:13px;color:var(--dim);}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0;padding-right:12px;font-size:13px;color:var(--dim);}
 
 /* ── PAGE WRAPPER ── */
 .page{display:none;flex-direction:column;min-height:calc(100vh - 49px);}
@@ -3079,7 +3079,6 @@ function renderRecapSpends(){
     <td colspan="4" style="padding:20px 16px;font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:var(--teal);text-align:center;">Total Pot: $${totalPot.toFixed(2)}</td>
   </tr>`;
   _updateSpendArrows();
-}
 }
 
 function renderRecapStats(){
