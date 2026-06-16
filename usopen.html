@@ -3598,6 +3598,7 @@ function render(){
       pointer-events:${isComm||(myName&&m.name.toLowerCase()===myName.toLowerCase()&&draftStatus==='waiting')?'auto':m.name==='Open'?'none':'auto'};"
     autocomplete="off"
     ${isComm||(myName&&m.name.toLowerCase()===myName.toLowerCase()&&draftStatus==="waiting")?`onfocus="this._orig=this.value;this.select()" onblur="renameMgr(this._orig,this.value,parseInt(this.dataset.mgrInp))" onkeydown="handleMgrKeydown(event,${i})"`:m.name!=='Open'?`onclick="showTeamModal('${m.name.replace(/'/g,"\\'")}')"`:`}`}/>
+      ${isComm&&m.name!=='Open'?`<button onclick="showTeamModal('${m.name.replace(/'/g,"\\'")}');event.stopPropagation();" title="View team" style="position:absolute;bottom:4px;left:4px;background:none;border:none;cursor:pointer;font-size:13px;color:var(--dim);padding:2px;line-height:1;opacity:0.6;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">👁</button>`:''}
       ${isL?`<span class="mgr-crown">👑</span>`:""}
     </div>
     <div style="position:absolute;bottom:0;left:0;right:0;height:22px;display:flex;align-items:center;justify-content:center;">
@@ -5177,7 +5178,7 @@ function showTeamModal(name){
   const total = getTotal(name);
 
   nameEl.textContent = name + "'s Team";
-  statsEl.textContent = `${myTeams.length} lot${myTeams.length!==1?'s':''} · $${spent.toFixed(2)} spent${tax>0?' + $'+tax.toFixed(2)+' tax':''} · $${total.toFixed(2)} total`;
+  statsEl.textContent = `$${spent.toFixed(2)} spent${tax>0?' + $'+tax.toFixed(2)+' tax':''}`;
 
   if(myTeams.length === 0){
     listEl.innerHTML = '<div style="color:var(--dim);font-size:14px;text-align:center;padding:24px 0;">No golfers acquired yet.</div>';
