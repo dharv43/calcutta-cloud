@@ -2943,18 +2943,22 @@ function goTab(tab){
 const RECAP_NOMINATORS = {}; // Will be populated after draft
 
 let _recapSort = 'order';
+let _recapDir = 1;
 let _spendSort = 'name';
 let _spendDir = 1;
 
 function _updateRecapArrows(){
-  const lots = ['order','nominator','owner','price'];
-  lots.forEach(k => {
+  ['order','nominator','owner','price'].forEach(k => {
     const arr = document.getElementById('recap-arr-'+k);
     const th = document.getElementById('recap-th-'+k);
     if(!arr||!th) return;
     const isPrice = k==='price';
     const active = isPrice ? (_recapSort==='price_desc'||_recapSort==='price_asc') : _recapSort===k;
-    const arrow = active ? (isPrice ? (_recapSort==='price_asc'?'↑':'↓') : '↓') : '';
+    let arrow = '';
+    if(active){
+      if(isPrice) arrow = _recapSort==='price_asc' ? '↑' : '↓';
+      else arrow = _recapDir===1 ? '↓' : '↑';
+    }
     arr.textContent = arrow;
     th.style.color = active ? 'var(--teal)' : 'var(--dim)';
   });
@@ -2974,8 +2978,12 @@ function _updateSpendArrows(){
 function setRecapSort(s){
   if(s==='price_desc'){
     _recapSort = _recapSort==='price_desc' ? 'price_asc' : 'price_desc';
+    _recapDir = 1;
+  } else if(_recapSort===s){
+    _recapDir *= -1;
   } else {
     _recapSort = s;
+    _recapDir = 1;
   }
   _updateRecapArrows();
   renderRecapLots();
@@ -3008,13 +3016,14 @@ function renderRecapLots(){
   let sorted = [...sold];
   if(_recapSort==='price_desc') sorted.sort((a,b)=>(b.price||0)-(a.price||0));
   else if(_recapSort==='price_asc') sorted.sort((a,b)=>(a.price||0)-(b.price||0));
-  else if(_recapSort==='owner') sorted.sort((a,b)=>(a.owner||'').localeCompare(b.owner||''));
+  else if(_recapSort==='owner') sorted.sort((a,b)=>_recapDir*(a.owner||'').localeCompare(b.owner||''));
   else if(_recapSort==='nominator') sorted.sort((a,b)=>{
     const ni = sold.indexOf(a), nj = sold.indexOf(b);
     const na = a.nomBy||RECAP_NOMINATORS[ni]||'';
     const nb = b.nomBy||RECAP_NOMINATORS[nj]||'';
-    return na.localeCompare(nb);
+    return _recapDir*na.localeCompare(nb);
   });
+  else sorted.sort((a,b)=>_recapDir*(sold.indexOf(a)-sold.indexOf(b)));
   const tbody = document.getElementById('recap-lots-tbody');
   if(!tbody) return;
   tbody.innerHTML = sorted.map((s, i) => {
@@ -3076,7 +3085,7 @@ function renderRecapSpends(){
   for(const [,spent] of Object.entries(spendMap)) totalPot+=spent+calcTax(spent,cap);
   const tfoot=document.getElementById('recap-spend-tfoot');
   if(tfoot) tfoot.innerHTML=`<tr style="background:var(--s3);">
-    <td colspan="4" style="padding:20px 16px;font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:var(--teal);text-align:center;">Total Pot: $${totalPot.toFixed(2)}</td>
+    <td colspan="4" style="padding:16px 16px;font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--teal);text-align:center;">Total Pot: $${totalPot.toFixed(2)}</td>
   </tr>`;
   _updateSpendArrows();
 }
