@@ -265,13 +265,13 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
 
 /* ── MANAGER TABLE ── */
 .mgr-wrap{overflow-x:auto;overflow-y:visible;border-bottom:1px solid var(--bdr);position:relative;margin-left:0;padding-left:0;}
-.mgr-wrap-hint{display:block;text-align:right;font-size:11px;color:var(--dim);padding:4px 12px 2px;letter-spacing:.5px;font-weight:600;min-height:20px;}
-.mgr-tbl{width:max-content;min-width:100%;border-collapse:collapse;background:var(--surf);}
+.mgr-wrap-hint{display:block;text-align:right;font-size:11px;color:var(--dim);padding:4px 12px;letter-spacing:.5px;font-weight:600;height:22px;line-height:14px;box-sizing:border-box;}
+.mgr-tbl{width:max-content;min-width:100%;border-collapse:separate;border-spacing:0;background:var(--surf);}
 .mgr-tbl th{font-size:21px;font-weight:700;padding:0;text-align:center;height:100px;box-sizing:border-box;vertical-align:top;min-width:75px;width:75px;
   border:1px solid var(--bdr);white-space:nowrap;background:var(--s2);color:var(--text);position:relative;}
 .mgr-tbl th input{font-size:8px;}.mgr-tbl th.lbl-col{font-size:14px;text-align:left;padding:8px 16px;
   color:var(--dim);text-transform:uppercase;letter-spacing:.5px;width:1%;min-width:0;white-space:nowrap;vertical-align:middle;
-  position:sticky;left:0;z-index:3;background:var(--s2);box-shadow:3px 0 6px rgba(0,0,0,.5);border-right:2px solid var(--bdr2);}
+  position:sticky;left:0;z-index:3;background:var(--s2);box-shadow:4px 0 8px rgba(0,0,0,.6),2px 0 0 var(--bdr2);}
 .mgr-tbl th.is-nom{border:2px solid var(--amber);}
 .mgr-bid-display{font-size:16px;font-weight:800;color:var(--dim);letter-spacing:.3px;line-height:1;}
 .mgr-bid-display.mgr-bid-leading{color:var(--grn);}
@@ -284,9 +284,9 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
 .mgr-tbl td{padding:9px 10px;text-align:center;border:1px solid var(--bdr);font-size:18px;white-space:nowrap;}
 .mgr-tbl td.lbl{background:var(--s2);text-align:left;padding-left:16px;
   font-size:14px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.5px;
-  position:sticky;left:0;z-index:2;box-shadow:3px 0 6px rgba(0,0,0,.5);border-right:2px solid var(--bdr2);}
-.mgr-tbl td.lbl.hl{background:rgba(0,212,170,.15);color:var(--teal);border-left:3px solid var(--teal);box-shadow:3px 0 6px rgba(0,0,0,.5);border-right:2px solid var(--bdr2);}
-.mgr-tbl td.hl-cell{background:rgba(0,212,170,.03);}
+  position:sticky;left:0;z-index:2;box-shadow:4px 0 8px rgba(0,0,0,.6),2px 0 0 var(--bdr2);}
+.mgr-tbl td.lbl.hl{background:rgba(0,30,20,1);color:var(--teal);border-left:3px solid var(--teal);box-shadow:4px 0 8px rgba(0,0,0,.6),2px 0 0 var(--bdr2);}
+.mgr-tbl td.hl-cell{background:#0a1f15;}
 .sub-tag{font-size:9px;opacity:.65;font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;display:block;}
 
 /* ── TEAM GRID ── */
