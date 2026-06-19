@@ -4339,15 +4339,15 @@ async function renderResults(){
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:16px;">
         <div>
           <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Thursday Leader <span style="text-transform:none;font-weight:600;color:#5a8a6a;">(comma-separate if tied)</span></label>
-          <input id="inp-rnd1" value="${rnd1Leader||''}" placeholder="Golfer name(s)..." autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateLeaderInput(this)">
+          <input id="inp-rnd1" value="${rnd1Leader||''}" placeholder="Golfer name(s)..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateLeaderInput(this)">
         </div>
         <div>
           <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Friday Leader <span style="text-transform:none;font-weight:600;color:#5a8a6a;">(comma-separate if tied)</span></label>
-          <input id="inp-rnd2" value="${rnd2Leader||''}" placeholder="Golfer name(s)..." autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateLeaderInput(this)">
+          <input id="inp-rnd2" value="${rnd2Leader||''}" placeholder="Golfer name(s)..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateLeaderInput(this)">
         </div>
         <div>
           <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Saturday Leader <span style="text-transform:none;font-weight:600;color:#5a8a6a;">(comma-separate if tied)</span></label>
-          <input id="inp-rnd3" value="${rnd3Leader||''}" placeholder="Golfer name(s)..." autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateLeaderInput(this)">
+          <input id="inp-rnd3" value="${rnd3Leader||''}" placeholder="Golfer name(s)..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateLeaderInput(this)">
         </div>
         <div>
           <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Hole-in-One</label>
