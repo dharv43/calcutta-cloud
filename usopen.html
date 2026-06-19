@@ -978,7 +978,7 @@ input[type=number].ncb-inp::-webkit-inner-spin-button,input[type=number].ncb-inp
 .chat-msg.me .chat-msg-bubble{background:var(--teal);color:#0a1628;border-bottom-right-radius:3px;}
 .chat-msg.them .chat-msg-bubble{background:var(--s3);color:var(--text);border-bottom-left-radius:3px;}
 .chat-sys-msg{text-align:center;font-size:10px;color:var(--dim);font-style:italic;padding:2px 0;}
-#chat-input-row{display:flex;gap:6px;padding:8px 10px;border-top:1px solid var(--bdr);flex-shrink:0;background:var(--s2);}
+#chat-input-row{display:flex;gap:6px;padding:8px 10px;border-top:1px solid var(--bdr);flex-shrink:0;background:var(--s2);border-radius:0 0 16px 16px;}
 #chat-inp{flex:1;background:var(--s3);border:1px solid var(--bdr);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--text);outline:none;min-width:0;}
 #chat-inp:focus{border-color:var(--bdr2);}
 #chat-send{width:32px;height:32px;background:var(--teal);border:none;border-radius:8px;color:#0a1628;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:900;}
@@ -1737,7 +1737,11 @@ function calcGolferWinningsFromResults(name, pot, golfResults){
     if(p.type==='finish' && p.pos===pos) total += pot*p.p;
     if(p.type==='leader'){
   const leaderKey = `round${p.round}_leader`;
-  if(golfResults[leaderKey]===name) total += pot*p.p;
+  const leaderVal = golfResults[leaderKey];
+  if(leaderVal){
+    const leaderNames = leaderVal.split(',').map(n=>n.trim()).filter(Boolean);
+    if(leaderNames.includes(name)) total += (pot*p.p)/leaderNames.length;
+  }
     }
     if(p.type==='bonus'){
   if(p.bonus==='hio' && bonus==='hio' && golfResults.hio===name) total += pot*p.p;
@@ -3047,7 +3051,7 @@ function renderRecapLots(){
       </td>
       <td style="padding:11px 16px;font-size:15px;font-weight:700;color:var(--dim);">${nominator}</td>
       <td style="padding:11px 16px;font-size:15px;font-weight:700;color:var(--amber);">${s.owner||'—'}</td>
-      <td style="padding:11px 16px;font-size:15px;font-weight:700;color:var(--teal);text-align:right;font-family:'DM Mono',monospace;">$${(s.price||0).toFixed(2)}</td>
+      <td style="padding:11px 16px;font-size:15px;font-weight:700;color:var(--teal);text-align:right;font-family:'DM Mono',monospace;">$${(s.price||0)}</td>
     </tr>`;
   }).join('');
 }
@@ -4128,23 +4132,33 @@ async function renderResults(){
     {label:'Friday Leader',name:rnd2Leader,pct:'5.0%',roundKey:'r2',thruLabel:'thru Fri'},
     {label:'Saturday Leader',name:rnd3Leader,pct:'5.0%',roundKey:'r3',thruLabel:'thru Sat'},
   ].map(l=>{
-    const gKey = l.name ? l.name.toLowerCase().replace(/ø/g,'o').replace(/å/g,'a').replace(/æ/g,'ae').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'_') : null;
-    const gResult = gKey ? (gr?.[gKey] || null) : null;
-    function parseScore(s){ if(!s||s==='—') return null; if(s==='E') return 0; return parseInt(s)||null; }
-    let roundScore = '—';
-    if(gResult){
+    const leaderNames = l.name ? l.name.split(',').map(n=>n.trim()).filter(Boolean) : [];
+    const isTied = leaderNames.length > 1;
+    function scoreForName(nm){
+      const gKey = nm.toLowerCase().replace(/ø/g,'o').replace(/å/g,'a').replace(/æ/g,'ae').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'_');
+      const gResult = gr?.[gKey] || null;
+      function parseScore(s){ if(!s||s==='—') return null; if(s==='E') return 0; return parseInt(s)||null; }
+      if(!gResult) return '—';
       const r1=parseScore(gResult.r1), r2=parseScore(gResult.r2), r3=parseScore(gResult.r3);
-      if(l.roundKey==='r1' && r1!==null) roundScore = r1===0?'E':(r1>0?'+'+r1:String(r1));
-      else if(l.roundKey==='r2' && r1!==null && r2!==null){ const t=r1+r2; roundScore=t===0?'E':(t>0?'+'+t:String(t)); }
-      else if(l.roundKey==='r3' && r1!==null && r2!==null && r3!==null){ const t=r1+r2+r3; roundScore=t===0?'E':(t>0?'+'+t:String(t)); }
+      let t=null;
+      if(l.roundKey==='r1' && r1!==null) t=r1;
+      else if(l.roundKey==='r2' && r1!==null && r2!==null) t=r1+r2;
+      else if(l.roundKey==='r3' && r1!==null && r2!==null && r3!==null) t=r1+r2+r3;
+      return t===null?'—':(t===0?'E':(t>0?'+'+t:String(t)));
     }
-    const scoreDisplay = roundScore === '—' ? '—' : `${roundScore} <span style="font-size:13px;font-weight:600;color:#6b9e7a;">(${l.thruLabel})</span>`;
+    const namesDisplay = leaderNames.length ? leaderNames.join(', ') : '—';
+    const ownersDisplay = leaderNames.length ? leaderNames.map(n=>ownerOf(n)||'—').join(', ') : '—';
+    const scoresDisplay = leaderNames.length
+      ? leaderNames.map(n=>`${scoreForName(n)} <span style="font-size:11px;font-weight:600;color:#6b9e7a;">(${l.thruLabel})</span>`).join('<br>')
+      : '—';
+    const payoutBase = leaderPayouts[l.label]||'—';
+    const payoutDisplay = isTied && totalPot ? `$${(totalPot*0.05/leaderNames.length).toFixed(2)} <span style="font-size:11px;color:#6b9e7a;">each</span>` : payoutBase;
     return `<tr>
-    <td style="${thS}">${l.label}</td>
-    <td style="${tdY}">${l.name||'—'}</td>
-    <td style="${tdY}">${l.name?ownerOf(l.name)||'—':'—'}</td>
-    <td style="${thS}text-align:center;color:#2d7a4a;">${scoreDisplay}</td>
-    <td style="${thS}text-align:center;white-space:nowrap;">${leaderPayouts[l.label]||'—'}</td>
+    <td style="${thS}">${l.label}${isTied?` <span style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#d4a72c;background:rgba(212,167,44,.12);padding:2px 6px;border-radius:4px;margin-left:6px;">Tied</span>`:''}</td>
+    <td style="${tdY}">${namesDisplay}</td>
+    <td style="${tdY}">${ownersDisplay}</td>
+    <td style="${thS}text-align:center;color:#2d7a4a;">${scoresDisplay}</td>
+    <td style="${thS}text-align:center;white-space:nowrap;">${payoutDisplay}</td>
     <td style="${thS}text-align:center;white-space:nowrap;">${l.pct}</td>
   </tr>`;
   }).join('');
@@ -4324,16 +4338,16 @@ async function renderResults(){
       <div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;margin-bottom:10px;">🏆 Round Leaders & Bonus</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:16px;">
         <div>
-          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Thursday Leader</label>
-          <input id="inp-rnd1" value="${rnd1Leader||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Thursday Leader <span style="text-transform:none;font-weight:600;color:#5a8a6a;">(comma-separate if tied)</span></label>
+          <input id="inp-rnd1" value="${rnd1Leader||''}" placeholder="Golfer name(s)..." autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateLeaderInput(this)">
         </div>
         <div>
-          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Friday Leader</label>
-          <input id="inp-rnd2" value="${rnd2Leader||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Friday Leader <span style="text-transform:none;font-weight:600;color:#5a8a6a;">(comma-separate if tied)</span></label>
+          <input id="inp-rnd2" value="${rnd2Leader||''}" placeholder="Golfer name(s)..." autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateLeaderInput(this)">
         </div>
         <div>
-          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Saturday Leader</label>
-          <input id="inp-rnd3" value="${rnd3Leader||''}" placeholder="Golfer name..." list="golfer-list" autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateGolferInput(this)">
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Saturday Leader <span style="text-transform:none;font-weight:600;color:#5a8a6a;">(comma-separate if tied)</span></label>
+          <input id="inp-rnd3" value="${rnd3Leader||''}" placeholder="Golfer name(s)..." autocomplete="off" style="width:100%;background:#1a4a2e;border:1px solid #2d7a4a;border-radius:8px;color:#e8f5e9;font-size:14px;padding:8px 12px;box-sizing:border-box;outline:none;" oninput="_validateLeaderInput(this)">
         </div>
         <div>
           <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#81c784;display:block;margin-bottom:6px;">Hole-in-One</label>
@@ -4813,6 +4827,15 @@ function _validateGolferInput(el){
   el.style.background = valid ? '#1a4a2e' : 'rgba(239,68,68,.1)';
 }
 
+function _validateLeaderInput(el){
+  const val = el.value.trim();
+  if(!val){ el.style.borderColor = '#2d7a4a'; el.style.background = '#1a4a2e'; return; }
+  const names = val.split(',').map(n=>n.trim()).filter(Boolean);
+  const valid = names.every(n => ALL_TEAMS.some(g => g.name === n));
+  el.style.borderColor = valid ? '#2d7a4a' : '#ef5350';
+  el.style.background = valid ? '#1a4a2e' : 'rgba(239,68,68,.1)';
+}
+
 // ── SAVE LEADERS & BONUS ─────────────────────────────────────
 async function saveLeaderBonusData(){
   const rnd1 = document.getElementById('inp-rnd1')?.value?.trim()||'';
@@ -4835,7 +4858,8 @@ async function saveLeaderBonusData(){
   const allInputIds = ['inp-place-1','inp-place-2','inp-place-3','inp-place-4','inp-place-5',
     'inp-place-6','inp-place-7','inp-place-8','inp-place-9','inp-place-10',
     'inp-place-11','inp-place-12','inp-place-13','inp-place-14','inp-place-15',
-    'inp-rnd1','inp-rnd2','inp-rnd3','inp-hio'];
+    'inp-hio'];
+  const leaderInputIds = ['inp-rnd1','inp-rnd2','inp-rnd3'];
   const golferNames = new Set(ALL_TEAMS.map(g=>g.name));
   for(const id of allInputIds){
     const el = document.getElementById(id);
@@ -4846,6 +4870,21 @@ async function saveLeaderBonusData(){
       el.focus();
       el.style.borderColor = '#ef5350';
       return;
+    }
+  }
+  for(const id of leaderInputIds){
+    const el = document.getElementById(id);
+    if(!el) continue;
+    const val = el.value.trim();
+    if(!val) continue;
+    const names = val.split(',').map(n=>n.trim()).filter(Boolean);
+    for(const n of names){
+      if(!golferNames.has(n)){
+        showToast('Invalid golfer: "'+n+'" — select from the list');
+        el.focus();
+        el.style.borderColor = '#ef5350';
+        return;
+      }
     }
   }
   try{
