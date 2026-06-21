@@ -4782,19 +4782,22 @@ async function fetchLiveLeaderboard(){
     nameMap['min woo lee'] = 'Min Woo Lee';
     const updates = {};
     let matched = 0;
+    const SKIP_SYNC = new Set(['jason_day']); // manually locked golfers — never overwrite
     for(const p of rows){
       const fullName = `${(p.firstName||'').trim()} ${(p.lastName||'').trim()}`.trim();
       const ourName = nameMap[normLocal(fullName)] || nameMap[normLocal(p.lastName||'')];
       if(!ourName) continue;
+      if(SKIP_SYNC.has(_gKey(ourName))) continue;
       matched++;
       const posRaw = String(p.position||'').trim();
       const cut = (p.status||'').toLowerCase().includes('cut')||posRaw.toLowerCase()==='cut';
+      const wd = (p.status||'').toLowerCase().includes('wd')||posRaw.toLowerCase()==='wd';
       const posNum = parseInt(posRaw)||0;
       updates[`golf/results/${_gKey(ourName)}`] = {
-        pos: cut?999:(isNaN(posNum)?0:posNum),
-        posStr: cut?'CUT':(posRaw||'—'),
+        pos: (cut||wd)?999:(isNaN(posNum)?0:posNum),
+        posStr: cut?'CUT':wd?'WD':(posRaw||'—'),
         score: (p.total||'E')==='0'?'E':(p.total||'E'),
-        status: cut?'cut':'active',
+        status: cut?'cut':wd?'wd':'active',
         currentRound: p.currentRoundScore||null,
         thru: p.thru||null,
         r1: p.rounds?.find(r=>r.roundId===1||r.roundId?.['$numberInt']==='1')?.scoreToPar||null,
