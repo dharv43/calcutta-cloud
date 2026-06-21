@@ -110,6 +110,9 @@ exports.handler = async (event) => {
     const updates = {};
     let matched = 0;
 
+    // Golfers whose Firebase data is manually locked — sync will never touch these
+    const SKIP_SYNC = new Set(['jason_day']);
+
     for (const p of rows) {
       const fullName = `${(p.firstName || '').trim()} ${(p.lastName || '').trim()}`.trim();
       const ourName = nameMap[normalize(fullName)]
@@ -118,6 +121,7 @@ exports.handler = async (event) => {
         || overrides[normalize(p.lastName || '')];
 
       if (!ourName) continue;
+      if (SKIP_SYNC.has(gKey(ourName))) continue;
       matched++;
 
       const posRaw = String(p.position || '').trim();
