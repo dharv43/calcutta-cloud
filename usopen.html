@@ -4558,7 +4558,7 @@ const GOLFER_NATIONALITY = {
 };
 
 function _computePositions(rows){
-  const active = rows.filter(r => r.result && r.result.status !== 'cut' && r.result.score && r.result.score !== '—');
+  const active = rows.filter(r => r.result && r.result.status !== 'cut' && r.result.status !== 'wd' && r.result.score && r.result.score !== '—');
   active.sort((a,b) => {
     const aS = a.result.score==='E'?0:(parseFloat(a.result.score)||9998);
     const bS = b.result.score==='E'?0:(parseFloat(b.result.score)||9998);
@@ -4573,6 +4573,7 @@ function _computePositions(rows){
     active[i].result._posNum = rank;
   }
   rows.filter(r => r.result?.status==='cut').forEach(r => { r.result._displayPos='CUT'; r.result._posNum=9999; });
+  rows.filter(r => r.result?.status==='wd').forEach(r => { r.result._displayPos='WD'; r.result._posNum=10000; });
   rows.filter(r => !r.result || !r.result.score || r.result.score==='—').forEach(r => { if(r.result) r.result._displayPos='—'; });
 }
 
@@ -4585,8 +4586,8 @@ function _lbRebuildRows(){
   const dir = window._lbSort?.dir || 1;
   rows.sort((a,b) => {
     if(col==='pos'||col==='score'){
-      const aP = a.result?._posNum ?? (a.result?.status==='cut'?9999:(a.result?.pos||9998));
-      const bP = b.result?._posNum ?? (b.result?.status==='cut'?9999:(b.result?.pos||9998));
+      const aP = a.result?._posNum ?? (a.result?.status==='wd'?10000:a.result?.status==='cut'?9999:(a.result?.pos||9998));
+      const bP = b.result?._posNum ?? (b.result?.status==='wd'?10000:b.result?.status==='cut'?9999:(b.result?.pos||9998));
       return (aP-bP)*dir;
     }
     if(col==='score'){
@@ -4616,17 +4617,18 @@ function _lbRebuildRows(){
     const r = rows[i];
     const res = r.result;
     const cut = res?.status === 'cut';
+    const wd = res?.status === 'wd';
     const posDisplay = res?._displayPos || '—';
     const score = res?.score || '—';
     const scoreNum = parseFloat(score);
-    const scoreColor = score==='E'?'#e8f5e9':scoreNum<0?'#FFFF00':scoreNum>0?'#ef5350':'#e8f5e9';
+    const scoreColor = wd?'#9e9e9e':score==='E'?'#e8f5e9':scoreNum<0?'#FFFF00':scoreNum>0?'#ef5350':'#e8f5e9';
     const rd = res?.currentRound || '—';
     const rdNum = parseFloat(rd);
     const rdColor = rd==='E'?'#81c784':rdNum<0?'#FFFF00':rdNum>0?'#ef5350':'#81c784';
     const posN = res?._posNum || 999;
-    const rowBg = cut?'background:rgba(239,68,68,.06);':posN===1?'background:rgba(255,255,0,.08);border-left:3px solid #FFFF00;':i%2===0?'background:#0d2818;':'background:#0f3020;';
-    const dimStyle = cut?'opacity:.45;':'';
-    const posStyle = cut?'color:#ef5350;font-size:17px;font-weight:900;':'color:#81c784;font-weight:800;';
+    const rowBg = wd?'background:rgba(120,120,130,.08);':cut?'background:rgba(239,68,68,.06);':posN===1?'background:rgba(255,255,0,.08);border-left:3px solid #FFFF00;':i%2===0?'background:#0d2818;':'background:#0f3020;';
+    const dimStyle = (cut||wd)?'opacity:.45;':'';
+    const posStyle = wd?'color:#9e9e9e;font-size:17px;font-weight:900;':cut?'color:#ef5350;font-size:17px;font-weight:900;':'color:#81c784;font-weight:800;';
     const flag = GOLFER_NATIONALITY[r.name] || '';
     const amBadge = r.amateur?`<span style="font-size:9px;font-weight:800;color:#f43f5e;background:rgba(244,63,94,.15);border:1px solid rgba(244,63,94,.3);border-radius:4px;padding:1px 5px;margin-left:6px;">AM</span>`:'';
     const r1 = r.result?.r1||'—'; const r2 = r.result?.r2||'—'; const r3 = r.result?.r3||'—'; const r4 = r.result?.r4||'—';
